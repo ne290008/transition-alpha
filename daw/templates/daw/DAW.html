@@ -1,0 +1,187 @@
+{% load static %}
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>DAW_Prototype_ver01</title>
+    <!--CSSはstyle_DAW.cssに集約-->
+    <link rel="stylesheet" type="text/css" href="{% static 'daw/css/style_DAW.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+    <!--jsは各ファイルに分ける 基本的に各部品ごとに名称をつける ex seekbar.js-->
+    <!--共用部分(jqueryなど)-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!--グローバル変数-->
+    <script type="text/javascript">
+      var mute_flg = [0, 0, 0, 0];
+    </script>
+    <!--以下inst_bar-->
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script type="text/javascript" src="{% static 'daw/js/instbar.js' %}"></script>
+    <script src="{% static 'daw/js/input-knobs.js' %}"></script>
+    <!--以下MIDIinput-->
+    <script type="text/javascript" src="{% static 'daw/js/MIDIinput.js' %}"></script>
+    <script src="{% static 'daw/js/tone.js' %}"></script>
+
+  </head>
+  <boby>
+    <div class="main">
+      <section class="menu_bar">
+        <!--左-->
+        <div class="save-button">
+          <p id="save">save</p>
+        </div>
+
+        <div class="help-button">
+          <p id="help">help</p>
+        </div>
+
+        <!--真ん中-->
+        <div class="saisei">
+          <ul>
+            <li><p id ="<<">
+              &lt;&lt;
+            </p></li>
+            <li><p id =">>">
+              &gt;&gt;
+            </p></li>
+            <li><p id ="play">▷</p></li>
+            <li><p id ="<<□"><<□</p></li>
+          </ul>
+        </div>
+        <!--右-->
+        <div class="select">
+          <table cellpadding="0" cellspacing="1" align="right">
+            <tr>
+              <td class="bar"><font size="6" color="#59DE64">1</font>
+                <br><font size="3" color="white">bar</font>
+              </td>
+              <td>
+                <font size="6" color="#59DE64"><output name="result">120</font>
+                <br><font size="3" color="white">bpm</font>
+              </td>
+              <td><font size="6" color="#59DE64">0:00:000</font>
+                  <br><font size="3" color="white">time</font>
+              </td>
+              <td><font size="6" color="#59DE64">C</font>
+              <br><font size="3" color="white">key</font>
+              </td>
+              <td class="artist">
+                <font size="6" color="#59DE64">スピッツ</font>
+                <br><font size="3" color="white">artist</font>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="scale_bar">
+          <div class="width_scale">
+              <label>width_scale : <input type="range" class="width_scale_bar" min="50" max="150"></label>
+          </div>
+          <div class="height_scale">
+              <label>height_scale : <input type="range" class="height_scale_bar" min="50" max="150"></label>
+          </div>
+        </div>
+      </section>
+      <div class="DAW_main">
+        <section class="inst_bar">
+          <div class="inst_item">
+            <div class="inst_item_left">
+                <p>Melody</p>
+                <a class="mute" href="#">
+                    <span><i class="fas fa-volume-up"></i></span>
+                    <span><i class="fas fa-volume-mute"></i></span>
+                </a>
+            </div>
+            <div class="inst_item_right">
+                <div>
+                    <p>L</p>
+                    <input type="range" class="input-knob pan"/>
+                    <p>R</p>
+                </div>
+                <input type="range" class="volume" value="50" min="0" max="99" >
+            </div>
+            <div class="inst_item_bottom">
+                <p>エフェクト</p>
+            </div>
+        </div>
+        <div class="inst_item">
+            <div class="inst_item_left">
+                <p>Chord</p>
+                <a class="mute" href="#">
+                    <span><i class="fas fa-volume-up"></i></span>
+                    <span><i class="fas fa-volume-mute"></i></span>
+                </a>
+            </div>
+            <div class="inst_item_right">
+                <div>
+                    <p>L</p>
+                    <input type="range" class="input-knob pan"/>
+                    <p>R</p>
+                </div>
+                <input type="range" class="volume" value="50" min="0" max="99" >
+            </div>
+            <div class="inst_item_bottom">
+                <p>エフェクト</p>
+            </div>
+        </div>
+        <div class="inst_item">
+            <div class="inst_item_left">
+                <p>Bass</p>
+                <a class="mute" href="#">
+                    <span><i class="fas fa-volume-up"></i></span>
+                    <span><i class="fas fa-volume-mute"></i></span>
+                </a>
+            </div>
+            <div class="inst_item_right">
+                <div>
+                    <p>L</p>
+                    <input type="range" class="input-knob pan"/>
+                    <p>R</p>
+                </div>
+                <input type="range" class="volume" value="50" min="0" max="99" >
+            </div>
+            <div class="inst_item_bottom">
+                <p>エフェクト</p>
+            </div>
+        </div>
+        <div class="inst_item">
+            <div class="inst_item_left">
+                <p>Drum</p>
+                <a class="mute" href="#">
+                    <span><i class="fas fa-volume-up"></i></span>
+                    <span><i class="fas fa-volume-mute"></i></span>
+                </a>
+            </div>
+            <div class="inst_item_right">
+                <div>
+                    <p>L</p>
+                    <input type="range" class="input-knob pan"/>
+                    <p>R</p>
+                </div>
+                <input type="range" class="volume" value="50" min="0" max="99" >
+            </div>
+            <div class="inst_item_bottom">
+                <p>エフェクト</p>
+            </div>
+        </div>
+      </section>
+        <section class="MIDI_input">
+          <div class="Measure_blank"></div>
+          <div class="Measure_grid">
+
+          </div>
+          <div class="MIDI_grid">
+            <div class="Mscale_grid">
+
+            </div>
+            <div class="note_grid">
+
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <!--以下menu_bar-->
+    <script type="text/javascript" src="{% static 'daw/js/menubar.js' %}"></script>
+  </boby>
+</html>

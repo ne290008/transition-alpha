@@ -1,0 +1,176 @@
+html {
+    font-family: helvetica, arial, sans-serif;
+    font-size: 15px;
+    color: #333;
+}
+body {
+    margin: 0;
+    background-color: #aaa;
+    margin-bottom: 30px;
+}
+a {
+    text-decoration: none;
+    color: #333;
+}
+
+/*start.html*/
+h1 {
+    background-color: #ccc;
+    font-size: 32px;
+    text-align: center;
+    padding: 0.8em 0;
+}
+h2{ 
+    font-size: 24px;
+    text-align: center;
+}
+
+#Progress_bar {
+    display: flex;
+    justify-content: center;
+    width: 500px;
+    margin: 0 auto;
+    cursor: pointer;
+}
+.Progress_number {
+    background-color: white;
+    border: 1px solid black;
+    padding: 10px 55px;
+    text-align: center;     
+}
+.Progress_number:hover{
+    opacity: 0.8;
+}
+.Progress_number p{
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+.Progress_number.is-active {
+    background-color: aquamarine;
+    transition: all 0.2s ease-out;
+}
+.start_page {
+    display: none;
+}
+.start_page.is-show {
+    display: block;
+}
+
+.Select_artist {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 80%;
+    margin: 0 auto;
+}
+.artists_item {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: white;
+    text-align: center;
+    line-height: 200px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+.artists_item:hover{
+    opacity: 0.8;
+}
+.artists_is-select{
+    background-color: aquamarine;
+}
+.artists_item p{
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+.start_next-btn{
+    width: 200px;
+    height: 75px;
+    font-size: 20px;
+    background-color: white;
+    border-radius: 15px;
+    text-align: center;
+    line-height: 75px;
+    margin: 0 auto;
+    cursor: pointer;
+}
+.start_next-btn:hover{
+    opacity: 0.8;
+}
+
+.Select_key {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 80%;
+    margin: 0 auto;
+}
+.keys_item {
+    width: 75px;
+    height: 75px;
+    background-color: white;
+    text-align: center;
+    line-height: 75px;
+    cursor: pointer;
+    
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+.keys_item:hover{
+    opacity: 0.8;
+}
+.keys_is-select{
+    background-color: aquamarine;
+}
+
+.Select_beat {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 80%;
+    margin: 0 auto;
+}
+.beats_item {
+    width: 250px;
+    height: 250px;
+    background-color: white;
+    border-radius: 20px;
+    text-align: center;
+    line-height: 250px;
+    
+    font-size: 32px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
+.beats_item:hover{
+    opacity: 0.8;
+}
+.beats_is-select{
+    background-color: aquamarine;
+}
+.beat_seekbar{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.bpm_changer{
+    text-align: center;
+    
+}
+.bpm_changer p{
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+.demo_seekbar{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

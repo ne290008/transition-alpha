@@ -1,0 +1,323 @@
+/*Layout*/
+html{
+  font-size: 15px;
+}
+boby{
+  background-color: white;
+}
+.main{
+  background-color: #aaa;
+  width: 100%;
+  height: 100%;
+  border: 3px solid #eee;
+  border-radius: 3px;
+}
+.DAW_main{
+  display: flex;
+  box-shadow: 1px 0 5px 1px #999;
+  width: 100%;
+  height: 85%;
+}
+
+/*Menubar*/
+.menu_bar{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ddd;
+  width: 100%;
+  height: 15%;
+  overflow: auto;
+}
+table td {
+  width:150px;
+  height:80px;
+  text-align:center;
+  vertical-align:middle;
+  background-color:#595757;
+  user-select: none; /* CSS3 */
+  -moz-user-select: none; /* Firefox */
+  -webkit-user-select: none; /* Safari、Chromeなど */
+  -ms-user-select: none; /* IE10かららしい */
+}
+td.artist{
+  width:230px;
+  height:70px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+td.bar{
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+/*saveボタン*/
+.save-button{
+  margin: 10px;
+}
+.save-button #save{
+  padding: 10px;
+  background: #ECCCCC;
+  border: none;
+  color: #595757;
+  font-size: 20px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 10px;
+  user-select: none; /* CSS3 */
+  -moz-user-select: none; /* Firefox */
+  -webkit-user-select: none; /* Safari、Chromeなど */
+  -ms-user-select: none; /* IE10かららしい <input type="number" name="bpm">bpm */
+}
+
+/*helpボタン*/
+.help-button{
+  margin: 10px;
+}
+.help-button #help{
+  padding: 10px;
+  background:  #8FDFDA;
+  border: none;
+  color: #595757;
+  font-size: 20px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 10px;
+  user-select: none; /* CSS3 */
+  -moz-user-select: none; /* Firefox */
+  -webkit-user-select: none; /* Safari、Chromeなど */
+  -ms-user-select: none; /* IE10かららしい */
+}
+
+div.save-button{
+  float: left;
+}
+
+div.help-button{
+  float: left;
+}
+
+div.select{
+  float: left;
+}
+/*再生停止*/
+.saisei{
+  width: 30%;
+  display: flex;
+  justify-content: center;
+}
+
+.saisei #saisei-button{
+  padding: 20px;
+  background: #CCCCCC;
+  border: none;
+  color: black;
+  width:75px;
+  height:65px;
+  font-size: 25px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #CCCCCC;
+  border-radius: 10px;
+  user-select: none; /* CSS3 */
+  -moz-user-select: none; /* Firefox */
+  -webkit-user-select: none; /* Safari、Chromeなど */
+  -ms-user-select: none; /* IE10かららしい */
+}
+li {
+  float: left;
+  border-right: 1px solid #bbbbbb;
+  width:75px;
+  height:60px;
+  text-align: center;
+}
+li a {
+  display: block;
+  color: white;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+
+/*instbar*/
+.inst_bar{
+  width: 20%;
+  height: 100%;
+}
+.inst_bar p{
+    margin: 0;
+}
+.inst_item{
+  display: flex;
+  flex-wrap: wrap;
+  background-color: white;
+  border: 1px solid #222;
+}
+.inst_item_left{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #222;
+    width: 50%;
+}
+.inst_item_left p{
+    margin-right: 0.5em;
+}
+.inst_item_right{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #222;
+    width: 50%;
+}
+.inst_item_right div{
+    display: flex;
+}
+.inst_item_right p{
+    display: flex;
+    align-items: center;
+    font-size: 0.75em;
+    margin: 0 4px;
+}
+.inst_item_bottom{
+    border: 1px solid #222;
+    width: 100%;
+    text-align: center;
+    padding: 8px 0;
+}
+.mute{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  background-color: #333;
+  border-radius: 50%;
+  color: #fff;
+  text-align: center;
+  
+  -webkit-transition: all .3s ease;
+  transition: all .3s ease;
+}
+.mute:hover{
+    opacity: 0.8;
+    color: aquamarine;
+}
+.mute.active {
+    background-color: #ccc;
+}
+.mute > span:last-of-type,
+.mute.active > span:first-of-type{
+    display: none;
+}
+.mute.active > span:last-of-type {
+    display: inline;
+}
+.inst_item_right .pan{
+    margin: 8px 0;
+}
+.inst_item_right .volume{
+    width: 80%;
+    margin: 8px 0;
+}
+
+/*MIDI input*/
+.MIDI_input{
+  display: flex;
+  flex-wrap: wrap;
+  width: 80%;
+  height: 100%;
+  user-select: none;
+}
+.Measure_blank{
+  flex-grow: 0;
+  flex-shrink: 0;
+  border: 1px solid #333;
+  background-color: white;
+  width: 100px;
+  height: 5%;
+}
+.Measure_grid{
+  flex-grow: 0;
+  flex-shrink: 0;
+  display: flex;
+  width: 87.5%;
+  height: 5%;
+  overflow: hidden;
+}
+.MIDI_grid{
+  flex-grow: 0;
+  flex-shrink: 0;
+  display: flex;
+  width: 100%;
+  height: 95%;
+  overflow: hidden;
+}
+.Mscale_grid{
+  width: 100px;
+  height: 100%;
+  overflow: hidden;
+}
+.note_grid{
+  display: flex;
+  width: 1200px;
+  height: 100%;
+  overflow: visible scroll;
+}
+.measures{
+  display: flex;
+  align-items: center;
+  flex-grow: 0;
+  flex-shrink: 0;
+  border: 1px solid #333;
+  box-sizing: border-box;
+  background-color: white;
+  width: 1600px;
+  height: 100%;
+}
+.measures p{
+  font-weight: bold;
+  margin: 0 0 0 10px;
+}
+.notes{
+  flex-grow: 0;
+  flex-shrink: 0;
+  background-color: white;
+  width: 50px;
+  height: 20px;
+  border: 1px solid rgba(20, 20, 20, 0.2);
+}
+.notes.highlighted {
+  background-color: deeppink;
+}
+/*追記 191010*/
+.measure_first_notes{
+  border-left: 1px solid rgba(20, 20, 20, 1);
+}
+.measure_beat_notes{
+  border-left: 1px solid rgba(20, 20, 20, 0.8);
+}
+/*ここまで*/
+.Mscale_notes{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 0;
+  flex-shrink: 0;
+  background-color: darkcyan;
+  width: 50px;
+  height: 20px;
+  border: 1px solid rgba(20, 20, 20, 0.8);
+}
+.Mscale_notes p{
+  color: white;
+  text-align: center;
+  margin: 0;
+}
