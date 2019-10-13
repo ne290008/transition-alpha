@@ -80,25 +80,25 @@ jQuery(function($){
   ローカルで起動する場合はWebブラウザの設定が必要。
   Firefoxならstrict_origin_policy = True(既定値) → Falseにする。(非推奨)*/
   var Piano_sampler = new Tone.Sampler({
-    "C4" : "./audio/Piano_C4.wav",
+    "C4" : "/static/daw/audio/Piano_C4.wav",
   }, {attack:0.05 ,release:1.0}).toMaster();
   var Drum_sampler = new Tone.Sampler({
-    "C1" : "./audio/Drum/Kick_C1.wav",
-    "C#1" : "./audio/Drum/Snare_Cs1.wav",
-    "D1" : "./audio/Drum/Snare_D1.wav",
-    "E1" : "./audio/Drum/Snare_E1.wav",
-    "F1" : "./audio/Drum/LowTom_F1.wav",
-    "F#1" : "./audio/Drum/CH_Fs1.wav",
-    "G1" : "./audio/Drum/LowTom_G1.wav",
-    "G#1" : "./audio/Drum/CHF_Gs1.wav",
-    "A1" : "./audio/Drum/MidTom_A1.wav",
-    "A#1" : "./audio/Drum/OH_As1.wav",
-    "B1" : "./audio/Drum/MidTom_B1.wav",
-    "C2" : "./audio/Drum/HighTom_C2.wav",
-    "C#2" : "./audio/Drum/CrashLeft_Cs2.wav",
-    "D2" : "./audio/Drum/HighTom_D2.wav",
-    "D#2" : "./audio/Drum/Ride_Ds2.wav",
-    "E2" : "./audio/Drum/OH_E2.wav"
+    "C1" : "/static/daw/audio/Drum/Kick_C1.wav",
+    "C#1" : "/static/daw/audio/Drum/Snare_Cs1.wav",
+    "D1" : "/static/daw/audio/Drum/Snare_D1.wav",
+    "E1" : "/static/daw/audio/Drum/Snare_E1.wav",
+    "F1" : "/static/daw/audio/Drum/LowTom_F1.wav",
+    "F#1" : "/static/daw/audio/Drum/CH_Fs1.wav",
+    "G1" : "/static/daw/audio/Drum/LowTom_G1.wav",
+    "G#1" : "/static/daw/audio/Drum/CHF_Gs1.wav",
+    "A1" : "/static/daw/audio/Drum/MidTom_A1.wav",
+    "A#1" : "/static/daw/audio/Drum/OH_As1.wav",
+    "B1" : "/static/daw/audio/Drum/MidTom_B1.wav",
+    "C2" : "/static/daw/audio/Drum/HighTom_C2.wav",
+    "C#2" : "/static/daw/audio/Drum/CrashLeft_Cs2.wav",
+    "D2" : "/static/daw/audio/Drum/HighTom_D2.wav",
+    "D#2" : "/static/daw/audio/Drum/Ride_Ds2.wav",
+    "E2" : "/static/daw/audio/Drum/OH_E2.wav"
   }).toMaster();
   function addMelody(time, note) {
     polysynth.triggerAttackRelease(note, '16n', time);
