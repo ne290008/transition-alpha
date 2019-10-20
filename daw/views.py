@@ -20,4 +20,4 @@ def daw_edit(request):
 
 # 開発用
 def root(request):
-    return redirect('daw_start')
+    return redirect('accounts/login')
