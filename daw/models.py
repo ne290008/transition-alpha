@@ -2,14 +2,6 @@ from django.db import models
 from django.utils import timezone
 
 '''
-class User(models.Model):
-    name =
-    password =
-
-    def __str__(self):
-        pass
-        #return self.name
-
 class Project(models.Model):
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     title = models.CharField(max_length=200)

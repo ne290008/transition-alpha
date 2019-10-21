@@ -60,7 +60,10 @@ ROOT_URLCONF = 'suzupro2019_alpha.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            # os.path.join(BASE_DIR, 'config', 'templates'),
+            os.path.join(BASE_DIR, 'accounts', 'templates', 'allauth'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -149,6 +152,8 @@ SITE_ID = 1
 
 LOGIN_REDIRECT_URL = 'home'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
+# 一旦ログアウト画面を表示せずにログアウト
+ACCOUNT_LOGOUT_ON_GET = True
 
 '''
 EMAIL_HOST = 'smtp.gmail.com'
