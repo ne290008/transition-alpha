@@ -8,7 +8,6 @@ $(function(){
     }else{
       mute_flg[mute_index] = 0;
     }
-    console.log(mute_flg[mute_index]);
   });
 });
 

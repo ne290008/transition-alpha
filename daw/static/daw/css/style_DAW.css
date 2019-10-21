@@ -27,11 +27,15 @@ boby{
   background-color: #ddd;
   width: 100%;
   height: 15%;
-  overflow: auto;
+  overflow: hidden;
 }
+
+/*menuテーブル*/
 table td {
-  width:150px;
-  height:80px;
+  position: relative;
+  width:120px;
+  max-width: 230px;
+  height:70px;
   text-align:center;
   vertical-align:middle;
   background-color:#595757;
@@ -40,27 +44,58 @@ table td {
   -webkit-user-select: none; /* Safari、Chromeなど */
   -ms-user-select: none; /* IE10かららしい */
 }
-td.artist{
+td.exartist{
   width:230px;
   height:70px;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
 }
-td.bar{
+/*menutable bar*/
+td.exbar{
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
+}
+td.extime{
+  width:170px;
+  height:70px;
+}
+.bpm_slider{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  right: 0;
+  opacity: 0;
+}
+.gr{
+  overflow: auto;
+  margin: 5px 0 0 0;
+  font-size: 28px;
+  color: #59DE64;
+  white-space: nowrap;
+  -ms-overflow-style:none;
+}
+.gr::-webkit-scrollbar{
+ display:none;
+}
+.wh{
+  margin: 0 0 5px 0;
+  font-size: 14px;
+  color: white;
 }
 
 /*saveボタン*/
 .save-button{
-  margin: 10px;
+  margin: 0;
+  padding-left: 20px;
 }
 .save-button #save{
   padding: 10px;
+  margin: 0;
   background: #ECCCCC;
   border: none;
   color: #595757;
-  font-size: 20px;
+  font-size: 30px;
   text-align: center;
   cursor: pointer;
   border-radius: 10px;
@@ -72,14 +107,15 @@ td.bar{
 
 /*helpボタン*/
 .help-button{
-  margin: 10px;
+  margin: 0;
 }
 .help-button #help{
   padding: 10px;
+  margin: 0;
   background:  #8FDFDA;
   border: none;
   color: #595757;
-  font-size: 20px;
+  font-size: 30px;
   text-align: center;
   cursor: pointer;
   border-radius: 10px;
@@ -87,61 +123,56 @@ td.bar{
   -moz-user-select: none; /* Firefox */
   -webkit-user-select: none; /* Safari、Chromeなど */
   -ms-user-select: none; /* IE10かららしい */
-}
-
-div.save-button{
-  float: left;
-}
-
-div.help-button{
-  float: left;
-}
-
-div.select{
-  float: left;
 }
 /*再生停止*/
 .saisei{
-  width: 30%;
   display: flex;
-  justify-content: center;
-}
-
-.saisei #saisei-button{
-  padding: 20px;
-  background: #CCCCCC;
-  border: none;
-  color: black;
-  width:75px;
-  height:65px;
-  font-size: 25px;
-  cursor: pointer;
-  border-radius: 10px;
-}
-ul {
-  list-style-type: none;
+  justify-content: space-between;
   margin: 0;
-  padding: 0;
-  overflow: hidden;
+  padding: 5px;
+  width: 200px;
   background-color: #CCCCCC;
   border-radius: 10px;
-  user-select: none; /* CSS3 */
-  -moz-user-select: none; /* Firefox */
-  -webkit-user-select: none; /* Safari、Chromeなど */
-  -ms-user-select: none; /* IE10かららしい */
 }
-li {
-  float: left;
-  border-right: 1px solid #bbbbbb;
-  width:75px;
-  height:60px;
+.saisei p{
+  font-size: 20px;
   text-align: center;
+  flex-grow: 1;
+  margin: 0;
+  padding: 10px;
 }
-li a {
+.saisei p + p{
+  border-left: 1px solid #666;
+}
+
+.play-btn{
   display: block;
-  color: white;
-  padding: 14px 16px;
-  text-decoration: none;
+}
+.stop-btn{
+  display: none;
+}
+
+/*scalebar*/
+.scale_bar{
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding-right: 20px;
+}
+.width_scale{
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: center;
+}
+.height_scale{
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: center;
+}
+label span{
+  margin-right: 7px;
 }
 
 
@@ -202,7 +233,7 @@ li a {
   border-radius: 50%;
   color: #fff;
   text-align: center;
-  
+
   -webkit-transition: all .3s ease;
   transition: all .3s ease;
 }
@@ -297,14 +328,15 @@ li a {
 .notes.highlighted {
   background-color: deeppink;
 }
-/*追記 191010*/
+.notes.ml_highlighted{
+
+}
 .measure_first_notes{
   border-left: 1px solid rgba(20, 20, 20, 1);
 }
 .measure_beat_notes{
   border-left: 1px solid rgba(20, 20, 20, 0.8);
 }
-/*ここまで*/
 .Mscale_notes{
   display: flex;
   justify-content: center;

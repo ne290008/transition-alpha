@@ -3,25 +3,31 @@ const add = (x) => {
 }
 
 /*再生ボタンと停止ボタン*/
-var start = true;
-document.getElementById("play").onclick = function() {
-  if(start == true){
-    document.getElementById("play").innerHTML = "□";
-    start = false;
+$('#play').click(function() {
+  if(play_flg == 0){
+    $('.play-btn').css('display','none');
+    $('.stop-btn').css('display','block');
   }else{
-    document.getElementById("play").innerHTML = "▷";
-    start = true;
+    $('.play-btn').css('display','block');
+    $('.stop-btn').css('display','none');
   }
-};
+})
 
 /*helpボタン*/
-var help = true;
-document.getElementById("help").onclick = function() {
-  if(help == true){
-    document.getElementById("numbpm").style.backgroundColor = "#FFFF8A";
-    help = false;
+var help_flg = 0;
+$('#help').click(function() {
+  if(help_flg == 0){
+    $('#help').css('background','#ffa500');
+    help_flg = 1;
   }else{
-    document.getElementById("numbpm").style.backgroundColor = "white";
-    help = true
+    $('#help').css('background','#8fdfda');
+    help_flg = 0;
   }
-};
+})
+
+//BPM
+$('.bpm_value').html(bpm);
+$('.bpm_slider').on('input change', function() {
+  bpm = $(this).val();
+  $('.bpm_value').html(bpm);
+});

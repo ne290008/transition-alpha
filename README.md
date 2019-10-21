@@ -12,3 +12,11 @@ $ cd transition-alpha
 $ python manage.py migrate
 $ python manage.py runserver
 ```
+
+<br>
+
+*注）関連パッケージのインストールが済んでいない場合はインストールする。関連パッケージ は`requirements.txt`を参照。以下コマンドの実行により一括でインストールすることができる。*
+
+```:command-line
+$ pip install -r requirements.txt
+```
