@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
+# TODO: クラスベースのビューに書き換える
+
 def list(request):
     return render(request, 'daw/list.html', {})
 

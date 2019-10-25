@@ -37,7 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'daw.apps.DawConfig',
+
+    'apiv1.apps.Apiv1Config',
+    'rest_framework',
+
     'accounts.apps.AccountsConfig',
     'django.contrib.sites',
     'allauth',
