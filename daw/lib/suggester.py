@@ -80,7 +80,7 @@ def generate_chord_prog(artist, key, start=None):
 
     while True:
         s = _BOS + " " + " ".join(sChArr)
-        chord_ids = [c2i[Ch] for Ch in s.strip().split(" ")]
+        chord_ids = [c2i[ch] for ch in s.strip().split(" ")]
 
         with chainer.using_config("train", False):
             model.reset_state()
@@ -99,7 +99,8 @@ def generate_chord_prog(artist, key, start=None):
 
                 chord_ids.append(cid)
 
-        print(' '.join([i2c[cid] for cid in chord_ids[1:]]))
+        # print(' '.join([i2c[cid] for cid in chord_ids[1:]]))
+
         chords = []
         for cid in chord_ids[1:]:
             try:
