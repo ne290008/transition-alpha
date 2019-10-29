@@ -36,12 +36,29 @@
                             alert("選択してください。");
                         }
                     } else {
-                        var data = {
-                            artist: "hoge",
-                            key: "C",
-                            beats: "B"
-                        };
-                        location.href = "{% url 'daw_new' %}";
+                        // テスト時の出力用にSessionStorageをclearしている
+                        window.sessionStorage.clear();
+                        const form = document.createElement('form');
+                        const artistInput = document.createElement('input');
+                        const keyInput = document.createElement('input');
+                        const beatInput = document.createElement('input');
+                        const chordsInput = document.createElement('input');
+                        const inputs = [artistInput, keyInput, beatInput, chordsInput];
+                        const names = ['artist', 'key', 'beat', 'chords']
+                        // const data = [artist, key, beat, chords];
+                        const data = ['Spitz', 'C', 'B', 'Dm Am Bb F'];
+                        form.method = 'POST';
+                        form.action = "{% url 'daw_new_p' %}";
+                        for(let i = 0; i < inputs.length; i++) {
+                            inputs[i].type = 'hidden';
+                            inputs[i].name = names[i];
+                            inputs[i].value = data[i];
+                            form.appendChild(inputs[i]);
+                        }
+                        document.body.appendChild(form);
+                        // 暫定的な対処につき変更の可能性有
+                        $('form').prepend('{% csrf_token %}');
+                        form.submit();
                     }
                 });
                 //artistボタン

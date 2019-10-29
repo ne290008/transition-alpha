@@ -19,4 +19,10 @@
     {% else %}
         <p><a href="{% url 'account_login' %}">ログイン</a></p>
     {% endif %}
+    {% if user.is_superuser %}
+        <br>
+        <p>遷移時の値保持 テスト用</p>
+        <p><a href="{% url 'daw_start_p' %}">POST Ver.</a></p>
+        <p><a href="{% url 'daw_start_s' %}">session Ver.</a></p>
+    {% endif %}
 {% endblock %}

@@ -45,8 +45,8 @@ def generate_chord_prog(artist, key, start=None):
     :param str artist: name of artist
     :param str key: key scale
     :param str s: chords what chord progression start with
-    :rtype: list[str]
-    :return: list of chord progression
+    :rtype: str
+    :return: space-separated chord progression
     """
 
     if key in major_keys:

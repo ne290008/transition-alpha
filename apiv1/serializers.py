@@ -1,12 +1,10 @@
 from rest_framework import serializers
 
-#from daw.lib.test_lib import test_method
 from daw.lib.suggester import generate_chord_prog
 from daw.lib.keys import major_keys, minor_keys
+from daw.lib.artists import artists
 
 keys = major_keys + minor_keys
-artists = ('hoge', 'fuga', 'piyo', 'foo', 'bar', 'buz')
-
 
 class ChordProgressionSerializer(serializers.Serializer):
     """コード進行を返すためのシリアライザ"""

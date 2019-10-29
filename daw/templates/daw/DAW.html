@@ -17,6 +17,25 @@
       var mute_flg = [0, 0, 0, 0];
       var play_flg = 0;
       var bpm = 120;
+
+      // 値受渡し POST版
+      let artist = '{{ artist }}';
+      let key = '{{ key }}';
+      let beat = '{{ beat }}';
+      let chordProg = '{{ chords }}';
+      if (artist+key+beat+chordProg == '') {
+          // 値受渡し Session版
+          // TODO: DAWのデータを保存するところでSessionStorageをclearすべき
+          artist = window.sessionStorage.getItem('artist');
+          key = window.sessionStorage.getItem('key');
+          beat = window.sessionStorage.getItem('beat');
+          chordProg = window.sessionStorage.getItem('chords');
+      }
+      // 確認用
+      console.log('artist: ' + artist);
+      console.log('key: ' + key);
+      console.log('beat: ' + beat);
+      console.log('chordProg: ' + chordProg);
     </script>
     <!--以下inst_bar-->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">

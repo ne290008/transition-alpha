@@ -160,6 +160,9 @@ ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
 # 一旦ログアウト画面を表示せずにログアウト
 ACCOUNT_LOGOUT_ON_GET = True
 
+# メールを実際に送らず、コンソール画面へ表示する
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 '''
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
