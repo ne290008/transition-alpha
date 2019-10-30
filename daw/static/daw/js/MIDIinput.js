@@ -116,10 +116,10 @@ jQuery(function($){
     "E2" : "/static/daw/audio/Drum/OH_E2.wav"
   }).toMaster();
   function addMelody(time, note) {
-    polysynth.triggerAttackRelease(note, '16n', time);
+    polysynth.triggerAttackRelease(note.note, note.duration, time);
   }
   function addChord(time, note) {
-    polysynth.triggerAttackRelease(note, '16n', time);
+    polysynth.triggerAttackRelease(note.note, note.duration, time);
   }
   function addBass(time, note) {
     plucksynth.triggerAttackRelease(note, '16n', time);
@@ -131,93 +131,90 @@ jQuery(function($){
   for(x=0; x<notes_measure/16; x++){ //
     for(y=0; y<4; y++){
       for(z=0; z<4; z++){
-        MIDI_Melody.push([x+":"+y+":"+z, [""]]);
+        MIDI_Melody.push({"time":x+":"+y+":"+z, "note":[""], "duration":"16n"});
       }
     }
   }
+  var ml_line = 0;
+  var ml_column = 0;
+  var first_column = 0;
+  var column_count = 0;
+
   $(".notes").mousedown(function(event) {
     isMouseDown = true;
+    var note_name = $('.notes').index(this) % 12;
+    var pitch =  Math.ceil((MIDI_Mscale-$('.notes').index(this)%MIDI_Mscale) / 12);
+    var MIDI_note = Mscale_C[note_name] + pitch;
+    var measure_count = $(this).parent().index();
     if(event.shiftKey == false){
-      $(this).toggleClass(".notes.highlighted");
-      var note_name = $('.notes').index(this) % 12;
-      var pitch =  Math.ceil((MIDI_Mscale-$('.notes').index(this)%MIDI_Mscale) / 12);
-      var MIDI_note = Mscale_C[note_name] + pitch;
-      var measure_count = $(this).parent().index();
       if($(this).hasClass('highlighted') == false){
         polysynth.triggerAttackRelease(Mscale_C[note_name]+pitch, '16n');
 
-        if(MIDI_Melody[measure_count][1] == ""){
-          MIDI_Melody[measure_count][1].splice(0, 1, MIDI_note);
+        if(MIDI_Melody[measure_count].note == ""){
+          MIDI_Melody[measure_count].note.splice(0, 1, MIDI_note);
           console.log("新規追加");
           console.log(MIDI_Melody);
         }else{
-          MIDI_Melody[measure_count][1].push(MIDI_note);
+          MIDI_Melody[measure_count].note.push(MIDI_note);
           console.log("追加");
           console.log(MIDI_Melody);
         }
       }else{
-        var highlight_index = $.inArray(MIDI_note, MIDI_Melody[measure_count][1]);
-        MIDI_Melody[measure_count][1].splice(highlight_index, 1);
+        var highlight_index = $.inArray(MIDI_note, MIDI_Melody[measure_count].note);
+        MIDI_Melody[measure_count].note.splice(highlight_index, 1);
         console.log("削除");
         console.log(MIDI_Melody);
       }
-      return false; // prevent text selection
+      $(this).toggleClass("highlighted");
     }else{
-      //2個以上なぞる際の処理
+      //2個以上つなげる際の処理
+      ml_line = $('.notes').index(this) % MIDI_Mscale;
+      if($(this).hasClass('ml_highlighted') == false){
+        polysynth.triggerAttackRelease(Mscale_C[note_name]+pitch, '16n');
+      }
+      $(this).toggleClass("ml_highlighted");
+      first_column = $(this).parent().index();
     }
+    return false; // prevent text selection
   })
   .mouseover(function(event) {
     if (isMouseDown) {
+      var note_name = $('.notes').index(this) % 12;
+      var pitch =  Math.ceil((MIDI_Mscale-$('.notes').index(this)%MIDI_Mscale) / 12);
+      var MIDI_note = Mscale_C[note_name] + pitch;
+      var measure_count = $(this).parent().index();
       if(event.shiftKey == false){
-        $(this).toggleClass(".notes.highlighted");
-        var note_name = $('.notes').index(this) % 12;
-        var pitch =  Math.ceil((MIDI_Mscale-$('.notes').index(this)%MIDI_Mscale) / 12);
-        var MIDI_note = Mscale_C[note_name] + pitch;
-        var measure_count = $(this).parent().index();
         if($(this).hasClass('highlighted') == false){
           polysynth.triggerAttackRelease(Mscale_C[note_name]+pitch, '16n');
 
-          if(MIDI_Melody[measure_count][1] == ""){
-            MIDI_Melody[measure_count][1].splice(0, 1, MIDI_note);
+          if(MIDI_Melody[measure_count].note == ""){
+            MIDI_Melody[measure_count].note.splice(0, 1, MIDI_note);
             console.log("新規追加");
             console.log(MIDI_Melody);
           }else{
-            MIDI_Melody[measure_count][1].push(MIDI_note);
+            MIDI_Melody[measure_count].note.push(MIDI_note);
             console.log("追加");
             console.log(MIDI_Melody);
           }
         }else{
-          var highlight_index = $.inArray(MIDI_note, MIDI_Melody[measure_count][1]);
-          MIDI_Melody[measure_count][1].splice(highlight_index, 1);
+          var highlight_index = $.inArray(MIDI_note, MIDI_Melody[measure_count].note);
+          MIDI_Melody[measure_count].note.splice(highlight_index, 1);
           console.log("削除");
           console.log(MIDI_Melody);
         }
-      }else{
-        //2個以上なぞる際の処理
-      }
-    }
-  })
-  .bind("selectstart", function () {
-    return false; // prevent text selection in IE
-  });
-  $(document).mouseup(function () {
-    isMouseDown = false;
-  });
-  $(".notes").mousedown(function(event) {
-    isMouseDown = true;
-    if(event.shiftKey == false){
-      $(this).toggleClass("highlighted");
-      return false; // prevent text selection
-    }else{
-      //2個以上なぞる際の処理
-    }
-  })
-  .mouseover(function(event) {
-    if (isMouseDown) {
-      if(event.shiftKey == false){
         $(this).toggleClass("highlighted");
       }else{
-        //2個以上なぞる際の処理
+        //2個以上つなげる際の処理
+        if($(this).hasClass('ml_highlighted') == false){
+
+        }else{
+
+        }
+        ml_column = $(this).parent().index();
+        if(ml_column > first_column+column_count){
+          $(".notes").eq(MIDI_Mscale*ml_column+ml_line).toggleClass("ml_highlighted");
+          column_count += 1;
+        }
       }
     }
   })
@@ -226,154 +223,171 @@ jQuery(function($){
   });
   $(document).mouseup(function () {
     isMouseDown = false;
-  });
+    if(column_count > 0){ //2個以上つなげる
+      var note_name = ml_line % 12;
+      var pitch =  Math.ceil((MIDI_Mscale-ml_line) / 12);
+      var MIDI_note = Mscale_C[note_name] + pitch;
+      if(MIDI_Melody[first_column].note == ""){
+        MIDI_Melody[first_column].note.splice(0, 1, MIDI_note);
+        MIDI_Melody[first_column].duration = (16-column_count) + "n";
+      }else{
+        MIDI_Melody[first_column].note.push(MIDI_note);
+        MIDI_Melody[first_column].duration = (16-column_count) + "n";
+      }
+    }
+    console.log(MIDI_Melody[first_column]);
+    //変数の初期化
+    ml_column = 0;
+    column_count = 0;
+  })
 
   //受け渡された情報からメロディを表示する 読み込みに使用
   //Polysynthは和音に対応 三次元配列で記述可
+  /*
   var test_Melody = [
-    ["0:0:0", ["A5"]],
-    ["0:0:1", [""]],
-    ["0:0:2", ["F5"]],
-    ["0:0:3", []],
-    ["0:1:0", ["G5"]],
-    ["0:1:1", []],
-    ["0:1:2", ["A5"]],
-    ["0:1:3", [""]],
-    ["0:2:0", []],
-    ["0:2:1", [""]],
-    ["0:2:2", ["F6"]],
-    ["0:2:3", []],
-    ["0:3:0", ["E6"]],
-    ["0:3:1", []],
-    ["0:3:2", ["F6"]],
-    ["0:3:3", []],
-    ["1:0:0", ["E6"]],
-    ["1:0:1", [""]],
-    ["1:0:2", ["F6"]],
-    ["1:0:3", []],
-    ["1:1:0", ["E6"]],
-    ["1:1:1", []],
-    ["1:1:2", [""]],
-    ["1:1:3", [""]],
-    ["1:2:0", ["C6"]],
-    ["1:2:1", [""]],
-    ["1:2:2", ["D6"]],
-    ["1:2:3", []],
-    ["1:3:0", ["A5"]],
-    ["1:3:1", []],
-    ["1:3:2", ["G5"]],
-    ["1:3:3", [""]],
-    ["2:0:0", ["F5"]],
-    ["2:0:1", [""]],
-    ["2:0:2", [""]],
-    ["2:0:3", []],
-    ["2:1:0", ["G5"]],
-    ["2:1:1", []],
-    ["2:1:2", [""]],
-    ["2:1:3", [""]],
-    ["2:2:0", ["F5"]],
-    ["2:2:1", [""]],
-    ["2:2:2", [""]],
-    ["2:2:3", []],
-    ["2:3:0", ["G5"]],
-    ["2:3:1", []],
-    ["2:3:2", ["D5"]],
-    ["2:3:3", []],
-    ["3:0:0", [""]],
-    ["3:0:1", [""]],
-    ["3:0:2", ["D5"]],
-    ["3:0:3", []],
-    ["3:1:0", ["A5"]],
-    ["3:1:1", []],
-    ["3:1:2", [""]],
-    ["3:1:3", [""]],
-    ["3:2:0", ["G5"]],
-    ["3:2:1", [""]],
-    ["3:2:2", [""]],
-    ["3:2:3", []],
-    ["3:3:0", ["F5"]],
-    ["3:3:1", []],
-    ["3:3:2", ["G5"]],
-    ["3:3:3", []],
-    ["4:0:0", ["A5"]],
-    ["4:0:1", [""]],
-    ["4:0:2", [""]],
-    ["4:0:3", []],
-    ["4:1:0", ["G5"]],
-    ["4:1:1", []],
-    ["4:1:2", ["F5"]],
-    ["4:1:3", [""]],
-    ["4:2:0", []],
-    ["4:2:1", [""]],
-    ["4:2:2", [""]],
-    ["4:2:3", []],
-    ["4:3:0", ["C6"]],
-    ["4:3:1", []],
-    ["4:3:2", [""]],
-    ["4:3:3", []],
-    ["5:0:0", [""]],
-    ["5:0:1", [""]],
-    ["5:0:2", ["G5"]],
-    ["5:0:3", []],
-    ["5:1:0", [""]],
-    ["5:1:1", []],
-    ["5:1:2", ["A5"]],
-    ["5:1:3", [""]],
-    ["5:2:0", ["A#5"]],
-    ["5:2:1", [""]],
-    ["5:2:2", ["A5"]],
-    ["5:2:3", []],
-    ["5:3:0", ["G5"]],
-    ["5:3:1", []],
-    ["5:3:2", [""]],
-    ["5:3:3", []],
-    ["6:0:0", ["A5"]],
-    ["6:0:1", [""]],
-    ["6:0:2", [""]],
-    ["6:0:3", []],
-    ["6:1:0", ["G5"]],
-    ["6:1:1", []],
-    ["6:1:2", ["C6"]],
-    ["6:1:3", [""]],
-    ["6:2:0", ["F5"]],
-    ["6:2:1", [""]],
-    ["6:2:2", [""]],
-    ["6:2:3", []],
-    ["6:3:0", ["G5"]],
-    ["6:3:1", []],
-    ["6:3:2", [""]],
-    ["6:3:3", []],
-    ["7:0:0", ["F5"]],
-    ["7:0:1", [""]],
-    ["7:0:2", [""]],
-    ["7:0:3", []],
-    ["7:1:0", ["G5"]],
-    ["7:1:1", []],
-    ["7:1:2", [""]],
-    ["7:1:3", [""]],
-    ["7:2:0", ["A5"]],
-    ["7:2:1", [""]],
-    ["7:2:2", [""]],
-    ["7:2:3", []],
-    ["7:3:0", ["F5"]],
-    ["7:3:1", []],
-    ["7:3:2", [""]],
-    ["7:3:3", []]
+    {"time":"0:0:0", "note":["A5"], "duration":"16n"},
+    {"time":"0:0:1", "note":[""], "duration":"16n"},
+    {"time":"0:0:2", "note":["F5"], "duration":"16n"},
+    {"time":"0:0:3", "note":[], "duration":"16n"},
+    {"time":"0:1:0", "note":["G5"], "duration":"16n"},
+    {"time":"0:1:1", "note":[], "duration":"16n"},
+    {"time":"0:1:2", "note":["A5"], "duration":"16n"},
+    {"time":"0:1:3", "note":[""], "duration":"16n"},
+    {"time":"0:2:0", "note":[], "duration":"16n"},
+    {"time":"0:2:1", "note":[""], "duration":"16n"},
+    {"time":"0:2:2", "note":["F6"], "duration":"16n"},
+    {"time":"0:2:3", "note":[], "duration":"16n"},
+    {"time":"0:3:0", "note":["E6"], "duration":"16n"},
+    {"time":"0:3:1", "note":[], "duration":"16n"},
+    {"time":"0:3:2", "note":["F6"], "duration":"16n"},
+    {"time":"0:3:3", "note":[], "duration":"16n"},
+    {"time":"1:0:0", "note":["E6"], "duration":"16n"},
+    {"time":"1:0:1", "note":[""], "duration":"16n"},
+    {"time":"1:0:2", "note":["F6"], "duration":"16n"},
+    {"time":"1:0:3", "note":[], "duration":"16n"},
+    {"time":"1:1:0", "note":["E6"], "duration":"8n"},
+    {"time":"1:1:1", "note":[], "duration":"16n"},
+    {"time":"1:1:2", "note":[""], "duration":"16n"},
+    {"time":"1:1:3", "note":[""], "duration":"16n"},
+    {"time":"1:2:0", "note":["C6"], "duration":"16n"},
+    {"time":"1:2:1", "note":[""], "duration":"16n"},
+    {"time":"1:2:2", "note":["D6"], "duration":"16n"},
+    {"time":"1:2:3", "note":[], "duration":"16n"},
+    {"time":"1:3:0", "note":["A5"], "duration":"16n"},
+    {"time":"1:3:1", "note":[], "duration":"16n"},
+    {"time":"1:3:2", "note":["G5"], "duration":"16n"},
+    {"time":"1:3:3", "note":[""], "duration":"16n"},
+    {"time":"2:0:0", "note":["F5"], "duration":"16n"},
+    {"time":"2:0:1", "note":[""], "duration":"16n"},
+    {"time":"2:0:2", "note":[""], "duration":"16n"},
+    {"time":"2:0:3", "note":[], "duration":"16n"},
+    {"time":"2:1:0", "note":["G5"], "duration":"16n"},
+    {"time":"2:1:1", "note":[], "duration":"16n"},
+    {"time":"2:1:2", "note":[""], "duration":"16n"},
+    {"time":"2:1:3", "note":[""], "duration":"16n"},
+    {"time":"2:2:0", "note":["F5"], "duration":"16n"},
+    {"time":"2:2:1", "note":[""], "duration":"16n"},
+    {"time":"2:2:2", "note":[""], "duration":"16n"},
+    {"time":"2:2:3", "note":[], "duration":"16n"},
+    {"time":"2:3:0", "note":["G5"], "duration":"16n"},
+    {"time":"2:3:1", "note":[], "duration":"16n"},
+    {"time":"2:3:2", "note":["D5"], "duration":"16n"},
+    {"time":"2:3:3", "note":[], "duration":"16n"},
+    {"time":"3:0:0", "note":[""], "duration":"16n"},
+    {"time":"3:0:1", "note":[""], "duration":"16n"},
+    {"time":"3:0:2", "note":["D5"], "duration":"16n"},
+    {"time":"3:0:3", "note":[], "duration":"16n"},
+    {"time":"3:1:0", "note":["A5"], "duration":"16n"},
+    {"time":"3:1:1", "note":[], "duration":"16n"},
+    {"time":"3:1:2", "note":[""], "duration":"16n"},
+    {"time":"3:1:3", "note":[""], "duration":"16n"},
+    {"time":"3:2:0", "note":["G5"], "duration":"16n"},
+    {"time":"3:2:1", "note":[""], "duration":"16n"},
+    {"time":"3:2:2", "note":[""], "duration":"16n"},
+    {"time":"3:2:3", "note":[], "duration":"16n"},
+    {"time":"3:3:0", "note":["F5"], "duration":"16n"},
+    {"time":"3:3:1", "note":[], "duration":"16n"},
+    {"time":"3:3:2", "note":["G5"], "duration":"16n"},
+    {"time":"3:3:3", "note":[], "duration":"16n"},
+    {"time":"4:0:0", "note":["A5"], "duration":"16n"},
+    {"time":"4:0:1", "note":[""], "duration":"16n"},
+    {"time":"4:0:2", "note":[""], "duration":"16n"},
+    {"time":"4:0:3", "note":[], "duration":"16n"},
+    {"time":"4:1:0", "note":["G5"], "duration":"16n"},
+    {"time":"4:1:1", "note":[], "duration":"16n"},
+    {"time":"4:1:2", "note":["F5"], "duration":"16n"},
+    {"time":"4:1:3", "note":[""], "duration":"16n"},
+    {"time":"4:2:0", "note":[], "duration":"16n"},
+    {"time":"4:2:1", "note":[""], "duration":"16n"},
+    {"time":"4:2:2", "note":[""], "duration":"16n"},
+    {"time":"4:2:3", "note":[], "duration":"16n"},
+    {"time":"4:3:0", "note":["C6"], "duration":"16n"},
+    {"time":"4:3:1", "note":[], "duration":"16n"},
+    {"time":"4:3:2", "note":[""], "duration":"16n"},
+    {"time":"4:3:3", "note":[], "duration":"16n"},
+    {"time":"5:0:0", "note":[""], "duration":"16n"},
+    {"time":"5:0:1", "note":[""], "duration":"16n"},
+    {"time":"5:0:2", "note":["G5"], "duration":"16n"},
+    {"time":"5:0:3", "note":[], "duration":"16n"},
+    {"time":"5:1:0", "note":[""], "duration":"16n"},
+    {"time":"5:1:1", "note":[], "duration":"16n"},
+    {"time":"5:1:2", "note":["A5"], "duration":"16n"},
+    {"time":"5:1:3", "note":[""], "duration":"16n"},
+    {"time":"5:2:0", "note":["A#5"], "duration":"16n"},
+    {"time":"5:2:1", "note":[""], "duration":"16n"},
+    {"time":"5:2:2", "note":["A5"], "duration":"16n"},
+    {"time":"5:2:3", "note":[], "duration":"16n"},
+    {"time":"5:3:0", "note":["G5"], "duration":"16n"},
+    {"time":"5:3:1", "note":[], "duration":"16n"},
+    {"time":"5:3:2", "note":[""], "duration":"16n"},
+    {"time":"5:3:3", "note":[], "duration":"16n"},
+    {"time":"6:0:0", "note":["A5"], "duration":"16n"},
+    {"time":"6:0:1", "note":[""], "duration":"16n"},
+    {"time":"6:0:2", "note":[""], "duration":"16n"},
+    {"time":"6:0:3", "note":[], "duration":"16n"},
+    {"time":"6:1:0", "note":["G5"], "duration":"16n"},
+    {"time":"6:1:1", "note":[], "duration":"16n"},
+    {"time":"6:1:2", "note":["C6"], "duration":"16n"},
+    {"time":"6:1:3", "note":[""], "duration":"16n"},
+    {"time":"6:2:0", "note":["F5"], "duration":"16n"},
+    {"time":"6:2:1", "note":[""], "duration":"16n"},
+    {"time":"6:2:2", "note":[""], "duration":"16n"},
+    {"time":"6:2:3", "note":[], "duration":"16n"},
+    {"time":"6:3:0", "note":["G5"], "duration":"16n"},
+    {"time":"6:3:1", "note":[], "duration":"16n"},
+    {"time":"6:3:2", "note":[""], "duration":"16n"},
+    {"time":"6:3:3", "note":[], "duration":"16n"},
+    {"time":"7:0:0", "note":["F5"], "duration":"16n"},
+    {"time":"7:0:1", "note":[""], "duration":"16n"},
+    {"time":"7:0:2", "note":[""], "duration":"16n"},
+    {"time":"7:0:3", "note":[], "duration":"16n"},
+    {"time":"7:1:0", "note":["G5"], "duration":"16n"},
+    {"time":"7:1:1", "note":[], "duration":"16n"},
+    {"time":"7:1:2", "note":[""], "duration":"16n"},
+    {"time":"7:1:3", "note":[""], "duration":"16n"},
+    {"time":"7:2:0", "note":["A5"], "duration":"16n"},
+    {"time":"7:2:1", "note":[""], "duration":"16n"},
+    {"time":"7:2:2", "note":[""], "duration":"16n"},
+    {"time":"7:2:3", "note":[], "duration":"16n"},
+    {"time":"7:3:0", "note":["F5"], "duration":"16n"},
+    {"time":"7:3:1", "note":[], "duration":"16n"},
+    {"time":"7:3:2", "note":[""], "duration":"16n"},
+    {"time":"7:3:3", "note":[], "duration":"16n"}
   ];
   var Mscale_number = {"C":11, "C#":10, "D":9, "D#":8, "E":7, "F":6, "F#":5, "G":4, "G#":3, "A":2, "A#":1, "B":0}; //逆順
   for(y=0; y<test_Melody.length; y++){
-    if(test_Melody[y][1].length > 0 && test_Melody[y][1][0] != ""){
-      for(z=0; z<test_Melody[y][1].length; z++){
-        if(MIDI_Melody[y][1] == ""){ //音情報
-          MIDI_Melody[y][1].splice(0, 1, test_Melody[y][1][0]);
+    if(test_Melody[y].note.length > 0 && test_Melody[y].note[0] != ""){
+      for(z=0; z<test_Melody[y].note.length; z++){
+        if(MIDI_Melody[y].note == ""){ //音情報
+          MIDI_Melody[y].note.splice(0, 1, test_Melody[y].note[0]);
         }else{
-          MIDI_Melody[y][1].push(test_Melody[y][1][z]);
+          MIDI_Melody[y].note.push(test_Melody[y].note[z]);
         }
-        var pitch = test_Melody[y][1][z].slice(-1);
-        if(test_Melody[y][1][z].length == 3){ //C#3
-          var note_name = test_Melody[y][1][z].slice(0, 2);
+        var pitch = test_Melody[y].note[z].slice(-1);
+        if(test_Melody[y].note[z].length == 3){ //C#3
+          var note_name = test_Melody[y].note[z].slice(0, 2);
         }else{
-          var note_name = test_Melody[y][1][z].slice(0, 1);
+          var note_name = test_Melody[y].note[z].slice(0, 1);
         }
         $(".notes").eq( //highlighted
           Mscale_number[note_name] + (6-pitch)*12 + y*MIDI_Mscale
@@ -383,137 +397,138 @@ jQuery(function($){
   }
   console.log("保存データ読み込み")
   console.log(MIDI_Melody);
+  */
 
   //コード(文字列からの生成)
   var chord_stroke = [ //CMaj基準
-    ["0:0:0", [47, 43, 40]],
-    ["0:0:1", [""]],
-    ["0:0:2", []],
-    ["0:0:3", []],
-    ["0:1:0", [47, 43, 40]],
-    ["0:1:1", []],
-    ["0:1:2", [47, 43, 40]],
-    ["0:1:3", [""]],
-    ["0:2:0", [""]],
-    ["0:2:1", [""]],
-    ["0:2:2", [47, 43, 40]],
-    ["0:2:3", [""]],
-    ["0:3:0", [47, 43, 40]],
-    ["0:3:1", [""]],
-    ["0:3:2", []],
-    ["0:3:3", [""]],
-    ["1:0:0", [47, 43, 40]],
-    ["1:0:1", [""]],
-    ["1:0:2", []],
-    ["1:0:3", []],
-    ["1:1:0", [47, 43, 40]],
-    ["1:1:1", []],
-    ["1:1:2", [47, 43, 40]],
-    ["1:1:3", [""]],
-    ["1:2:0", [""]],
-    ["1:2:1", [""]],
-    ["1:2:2", [47, 43, 40]],
-    ["1:2:3", [""]],
-    ["1:3:0", [47, 43, 40]],
-    ["1:3:1", [""]],
-    ["1:3:2", []],
-    ["1:3:3", [""]],
-    ["2:0:0", [47, 43, 40]],
-    ["2:0:1", [""]],
-    ["2:0:2", []],
-    ["2:0:3", []],
-    ["2:1:0", [47, 43, 40]],
-    ["2:1:1", []],
-    ["2:1:2", [47, 43, 40]],
-    ["2:1:3", [""]],
-    ["2:2:0", [""]],
-    ["2:2:1", [""]],
-    ["2:2:2", [47, 43, 40]],
-    ["2:2:3", [""]],
-    ["2:3:0", [47, 43, 40]],
-    ["2:3:1", [""]],
-    ["2:3:2", []],
-    ["2:3:3", [""]],
-    ["3:0:0", [47, 43, 40]],
-    ["3:0:1", [""]],
-    ["3:0:2", []],
-    ["3:0:3", []],
-    ["3:1:0", [47, 43, 40]],
-    ["3:1:1", []],
-    ["3:1:2", [47, 43, 40]],
-    ["3:1:3", [""]],
-    ["3:2:0", [""]],
-    ["3:2:1", [""]],
-    ["3:2:2", [47, 43, 40]],
-    ["3:2:3", [""]],
-    ["3:3:0", [47, 43, 40]],
-    ["3:3:1", [""]],
-    ["3:3:2", []],
-    ["3:3:3", [""]],
-    ["4:0:0", [47, 43, 40]],
-    ["4:0:1", [""]],
-    ["4:0:2", []],
-    ["4:0:3", []],
-    ["4:1:0", [47, 43, 40]],
-    ["4:1:1", []],
-    ["4:1:2", [47, 43, 40]],
-    ["4:1:3", [""]],
-    ["4:2:0", [""]],
-    ["4:2:1", [""]],
-    ["4:2:2", [47, 43, 40]],
-    ["4:2:3", [""]],
-    ["4:3:0", [47, 43, 40]],
-    ["4:3:1", [""]],
-    ["4:3:2", []],
-    ["4:3:3", [""]],
-    ["5:0:0", [47, 43, 40]],
-    ["5:0:1", [""]],
-    ["5:0:2", []],
-    ["5:0:3", []],
-    ["5:1:0", [47, 43, 40]],
-    ["5:1:1", []],
-    ["5:1:2", [47, 43, 40]],
-    ["5:1:3", [""]],
-    ["5:2:0", [""]],
-    ["5:2:1", [""]],
-    ["5:2:2", [47, 43, 40]],
-    ["5:2:3", [""]],
-    ["5:3:0", [47, 43, 40]],
-    ["5:3:1", [""]],
-    ["5:3:2", []],
-    ["5:3:3", [""]],
-    ["6:0:0", [47, 43, 40]],
-    ["6:0:1", [""]],
-    ["6:0:2", []],
-    ["6:0:3", []],
-    ["6:1:0", [47, 43, 40]],
-    ["6:1:1", []],
-    ["6:1:2", [47, 43, 40]],
-    ["6:1:3", [""]],
-    ["6:2:0", [""]],
-    ["6:2:1", [""]],
-    ["6:2:2", [47, 43, 40]],
-    ["6:2:3", [""]],
-    ["6:3:0", [47, 43, 40]],
-    ["6:3:1", [""]],
-    ["6:3:2", []],
-    ["6:3:3", [""]],
-    ["7:0:0", [47, 43, 40]],
-    ["7:0:1", [""]],
-    ["7:0:2", []],
-    ["7:0:3", []],
-    ["7:1:0", [47, 43, 40]],
-    ["7:1:1", []],
-    ["7:1:2", [47, 43, 40]],
-    ["7:1:3", [""]],
-    ["7:2:0", [""]],
-    ["7:2:1", [""]],
-    ["7:2:2", [47, 43, 40]],
-    ["7:2:3", [""]],
-    ["7:3:0", [47, 43, 40]],
-    ["7:3:1", [""]],
-    ["7:3:2", []],
-    ["7:3:3", [""]]
+    {"time":"0:0:0", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"0:0:1", "note":[""], "duration":"16n"},
+    {"time":"0:0:2", "note":[], "duration":"16n"},
+    {"time":"0:0:3", "note":[], "duration":"16n"},
+    {"time":"0:1:0", "note":[47, 43, 40], "duration":"16n"},
+    {"time":"0:1:1", "note":[], "duration":"16n"},
+    {"time":"0:1:2", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"0:1:3", "note":[""], "duration":"16n"},
+    {"time":"0:2:0", "note":[""], "duration":"16n"},
+    {"time":"0:2:1", "note":[""], "duration":"16n"},
+    {"time":"0:2:2", "note":[47, 43, 40], "duration":"16n"},
+    {"time":"0:2:3", "note":[""], "duration":"16n"},
+    {"time":"0:3:0", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"0:3:1", "note":[""], "duration":"16n"},
+    {"time":"0:3:2", "note":[], "duration":"16n"},
+    {"time":"0:3:3", "note":[""], "duration":"16n"},
+    {"time":"1:0:0", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"1:0:1", "note":[""], "duration":"16n"},
+    {"time":"1:0:2", "note":[], "duration":"16n"},
+    {"time":"1:0:3", "note":[], "duration":"16n"},
+    {"time":"1:1:0", "note":[47, 43, 40], "duration":"16n"},
+    {"time":"1:1:1", "note":[], "duration":"16n"},
+    {"time":"1:1:2", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"1:1:3", "note":[""], "duration":"16n"},
+    {"time":"1:2:0", "note":[""], "duration":"16n"},
+    {"time":"1:2:1", "note":[""], "duration":"16n"},
+    {"time":"1:2:2", "note":[47, 43, 40], "duration":"16n"},
+    {"time":"1:2:3", "note":[""], "duration":"16n"},
+    {"time":"1:3:0", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"1:3:1", "note":[""], "duration":"16n"},
+    {"time":"1:3:2", "note":[], "duration":"16n"},
+    {"time":"1:3:3", "note":[""], "duration":"16n"},
+    {"time":"2:0:0", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"2:0:1", "note":[""], "duration":"16n"},
+    {"time":"2:0:2", "note":[], "duration":"16n"},
+    {"time":"2:0:3", "note":[], "duration":"16n"},
+    {"time":"2:1:0", "note":[47, 43, 40], "duration":"16n"},
+    {"time":"2:1:1", "note":[], "duration":"16n"},
+    {"time":"2:1:2", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"2:1:3", "note":[""], "duration":"16n"},
+    {"time":"2:2:0", "note":[""], "duration":"16n"},
+    {"time":"2:2:1", "note":[""], "duration":"16n"},
+    {"time":"2:2:2", "note":[47, 43, 40], "duration":"16n"},
+    {"time":"2:2:3", "note":[""], "duration":"16n"},
+    {"time":"2:3:0", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"2:3:1", "note":[""], "duration":"16n"},
+    {"time":"2:3:2", "note":[], "duration":"16n"},
+    {"time":"2:3:3", "note":[""], "duration":"16n"},
+    {"time":"3:0:0", "note":[47, 43, 40], "duration":"16n"},
+    {"time":"3:0:1", "note":[""], "duration":"16n"},
+    {"time":"3:0:2", "note":[], "duration":"16n"},
+    {"time":"3:0:3", "note":[], "duration":"16n"},
+    {"time":"3:1:0", "note":[47, 43, 40], "duration":"16n"},
+    {"time":"3:1:1", "note":[], "duration":"16n"},
+    {"time":"3:1:2", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"3:1:3", "note":[""], "duration":"16n"},
+    {"time":"3:2:0", "note":[""], "duration":"16n"},
+    {"time":"3:2:1", "note":[""], "duration":"16n"},
+    {"time":"3:2:2", "note":[47, 43, 40], "duration":"16n"},
+    {"time":"3:2:3", "note":[""], "duration":"16n"},
+    {"time":"3:3:0", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"3:3:1", "note":[""], "duration":"16n"},
+    {"time":"3:3:2", "note":[], "duration":"16n"},
+    {"time":"3:3:3", "note":[""], "duration":"16n"},
+    {"time":"4:0:0", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"4:0:1", "note":[""], "duration":"16n"},
+    {"time":"4:0:2", "note":[], "duration":"16n"},
+    {"time":"4:0:3", "note":[], "duration":"16n"},
+    {"time":"4:1:0", "note":[47, 43, 40], "duration":"16n"},
+    {"time":"4:1:1", "note":[], "duration":"16n"},
+    {"time":"4:1:2", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"4:1:3", "note":[""], "duration":"16n"},
+    {"time":"4:2:0", "note":[""], "duration":"16n"},
+    {"time":"4:2:1", "note":[""], "duration":"16n"},
+    {"time":"4:2:2", "note":[47, 43, 40], "duration":"16n"},
+    {"time":"4:2:3", "note":[""], "duration":"16n"},
+    {"time":"4:3:0", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"4:3:1", "note":[""], "duration":"16n"},
+    {"time":"4:3:2", "note":[], "duration":"16n"},
+    {"time":"4:3:3", "note":[""], "duration":"16n"},
+    {"time":"5:0:0", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"5:0:1", "note":[""], "duration":"16n"},
+    {"time":"5:0:2", "note":[], "duration":"16n"},
+    {"time":"5:0:3", "note":[], "duration":"16n"},
+    {"time":"5:1:0", "note":[47, 43, 40], "duration":"16n"},
+    {"time":"5:1:1", "note":[], "duration":"16n"},
+    {"time":"5:1:2", "note":[47, 43, 40], "duration":"16n"},
+    {"time":"5:1:3", "note":[""], "duration":"16n"},
+    {"time":"5:2:0", "note":[""], "duration":"16n"},
+    {"time":"5:2:1", "note":[""], "duration":"16n"},
+    {"time":"5:2:2", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"5:2:3", "note":[""], "duration":"16n"},
+    {"time":"5:3:0", "note":[47, 43, 40], "duration":"16n"},
+    {"time":"5:3:1", "note":[""], "duration":"16n"},
+    {"time":"5:3:2", "note":[], "duration":"16n"},
+    {"time":"5:3:3", "note":[""], "duration":"16n"},
+    {"time":"6:0:0", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"6:0:1", "note":[""], "duration":"16n"},
+    {"time":"6:0:2", "note":[], "duration":"16n"},
+    {"time":"6:0:3", "note":[], "duration":"16n"},
+    {"time":"6:1:0", "note":[47, 43, 40], "duration":"16n"},
+    {"time":"6:1:1", "note":[], "duration":"16n"},
+    {"time":"6:1:2", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"6:1:3", "note":[""], "duration":"16n"},
+    {"time":"6:2:0", "note":[""], "duration":"16n"},
+    {"time":"6:2:1", "note":[""], "duration":"16n"},
+    {"time":"6:2:2", "note":[47, 43, 40], "duration":"16n"},
+    {"time":"6:2:3", "note":[""], "duration":"16n"},
+    {"time":"6:3:0", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"6:3:1", "note":[""], "duration":"16n"},
+    {"time":"6:3:2", "note":[], "duration":"16n"},
+    {"time":"6:3:3", "note":[""], "duration":"16n"},
+    {"time":"7:0:0", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"7:0:1", "note":[""], "duration":"16n"},
+    {"time":"7:0:2", "note":[], "duration":"16n"},
+    {"time":"7:0:3", "note":[], "duration":"16n"},
+    {"time":"7:1:0", "note":[47, 43, 40], "duration":"16n"},
+    {"time":"7:1:1", "note":[], "duration":"16n"},
+    {"time":"7:1:2", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"7:1:3", "note":[""], "duration":"16n"},
+    {"time":"7:2:0", "note":[""], "duration":"16n"},
+    {"time":"7:2:1", "note":[""], "duration":"16n"},
+    {"time":"7:2:2", "note":[47, 43, 40], "duration":"16n"},
+    {"time":"7:2:3", "note":[""], "duration":"16n"},
+    {"time":"7:3:0", "note":[47, 43, 40], "duration":"8n"},
+    {"time":"7:3:1", "note":[""], "duration":"16n"},
+    {"time":"7:3:2", "note":[], "duration":"16n"},
+    {"time":"7:3:3", "note":[""], "duration":"16n"}
   ];
   var test_chord2_original = "Dm Am Bb F"; //Chainerからの出力
   var test_chord2 = test_chord2_original.split(" ");
@@ -567,20 +582,20 @@ jQuery(function($){
     }
 
     for(var y=0; y<16; y++){
-      if(chord_stroke[x*16+y][1].length > 0 && chord_stroke[x*16+y][1][0] != ""){
+      if(chord_stroke[x*16+y].note.length > 0 && chord_stroke[x*16+y].note[0] != ""){
         MIDI_chord.push(chord_stroke[x*16+y]);
         for(var z=0; z<3; z++){
-          MIDI_chord[cc_index][1][z] -= Keys[key[x]];
-          MIDI_chord[cc_index][1][z] += chord[x][z];
+          MIDI_chord[cc_index].note[z] -= Keys[key[x]];
+          MIDI_chord[cc_index].note[z] += chord[x][z];
         }
         if(tension[x] != 0){
-          MIDI_chord[cc_index][1].push(MIDI_chord[cc_index][1][2] - tension[x]);
+          MIDI_chord[cc_index].note.push(MIDI_chord[cc_index].note[2] - tension[x]);
         }
-        for(var aa=0; aa<MIDI_chord[cc_index][1].length; aa++){
-          var note_name = MIDI_chord[cc_index][1][aa] % 12;
-          var pitch =  Math.ceil((MIDI_Mscale-MIDI_chord[cc_index][1][aa]%MIDI_Mscale) / 12);
+        for(var aa=0; aa<MIDI_chord[cc_index].note.length; aa++){
+          var note_name = MIDI_chord[cc_index].note[aa] % 12;
+          var pitch =  Math.ceil((MIDI_Mscale-MIDI_chord[cc_index].note[aa]%MIDI_Mscale) / 12);
           var MIDI_note = Mscale_C[note_name] + pitch;
-          MIDI_chord[cc_index][1].splice(aa, 1, MIDI_note);
+          MIDI_chord[cc_index].note.splice(aa, 1, MIDI_note);
         }
         cc_index += 1;
       }
@@ -742,7 +757,7 @@ jQuery(function($){
       var play_MIDI_Melody = []; //再生用に無駄な情報を省いたもの
       var play_MIDI_Drum =[];
       for(z=0; z<test_drum.length; z++){ //本来はz<notes_measure
-        if(MIDI_Melody[z][1].length > 0 && MIDI_Melody[z][1][0] != ""){
+        if(MIDI_Melody[z].note.length > 0 && MIDI_Melody[z].note[0] != ""){
           play_MIDI_Melody.push(MIDI_Melody[z]);
         }
         if(test_drum[z][1].length > 0 && test_drum[z][1][0] != ""){

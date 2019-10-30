@@ -102,7 +102,7 @@ td.extime{
   user-select: none; /* CSS3 */
   -moz-user-select: none; /* Firefox */
   -webkit-user-select: none; /* Safari、Chromeなど */
-  -ms-user-select: none; /* IE10かららしい <input type="number" name="bpm">bpm */
+  -ms-user-select: none; /* IE10かららしi */
 }
 
 /*helpボタン*/
@@ -123,6 +123,9 @@ td.extime{
   -moz-user-select: none; /* Firefox */
   -webkit-user-select: none; /* Safari、Chromeなど */
   -ms-user-select: none; /* IE10かららしい */
+
+  -webkit-transition: all .3s ease;
+  transition: all .3s ease;
 }
 /*再生停止*/
 .saisei{
@@ -190,38 +193,42 @@ label span{
   background-color: white;
   border: 1px solid #222;
 }
+.inst_item > div{
+  border-radius: 2px;
+  background-color: #fafafa;
+}
 .inst_item_left{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #222;
-    width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #222;
+  width: 50%;
 }
 .inst_item_left p{
-    margin-right: 0.5em;
+  margin-right: 0.5em;
 }
 .inst_item_right{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #222;
-    width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #222;
+  width: 50%;
 }
 .inst_item_right div{
-    display: flex;
+  display: flex;
 }
 .inst_item_right p{
-    display: flex;
-    align-items: center;
-    font-size: 0.75em;
-    margin: 0 4px;
+  display: flex;
+  align-items: center;
+  font-size: 0.75em;
+  margin: 0 4px;
 }
 .inst_item_bottom{
-    border: 1px solid #222;
-    width: 100%;
-    text-align: center;
-    padding: 8px 0;
+  border: 1px solid #222;
+  width: 100%;
+  text-align: center;
+  padding: 8px 0;
 }
 .mute{
   display: flex;
@@ -329,7 +336,8 @@ label span{
   background-color: deeppink;
 }
 .notes.ml_highlighted{
-
+  background-color: blueviolet;
+  border-right: 1px solid blueviolet;
 }
 .measure_first_notes{
   border-left: 1px solid rgba(20, 20, 20, 1);

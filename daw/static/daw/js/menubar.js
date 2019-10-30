@@ -17,7 +17,7 @@ $('#play').click(function() {
 var help_flg = 0;
 $('#help').click(function() {
   if(help_flg == 0){
-    $('#help').css('background','#ffa500');
+    $('#help').css('background','#ffff7f');
     help_flg = 1;
   }else{
     $('#help').css('background','#8fdfda');
