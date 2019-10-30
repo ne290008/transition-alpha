@@ -36,6 +36,15 @@
                             alert("選択してください。");
                         }
                     } else {
+                        window.sessionStorage.clear();
+                        const artist = 'Spitz';
+                        const key = 'C';
+                        const beat = 'B';
+                        const chords = 'Dm Am Bb F';
+                        window.sessionStorage.setItem(['artist'], [artist]);
+                        window.sessionStorage.setItem(['key'], [key]);
+                        window.sessionStorage.setItem(['beat'], [beat]);
+                        window.sessionStorage.setItem(['chords'], [chords]);
                         location.href = "{% url 'daw_new' %}";
                     }
                 });
