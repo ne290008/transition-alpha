@@ -58,6 +58,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'global_login_required.GlobalLoginRequiredMiddleware',  # 追加
 ]
 
 ROOT_URLCONF = 'suzupro2019_alpha.urls'
@@ -167,3 +169,11 @@ EMAIL_HOST_USER = '自分のgmailアドレス'
 EMAIL_HOST_PASSWORD = 'gmailのパスワード'
 EMAIL_USE_TLS = True
 '''
+
+# ログインしなくてもよいページのURLを記述
+PUBLIC_PATHS = [
+    '/accounts/login/',
+    '/accounts/signup/',
+    # apiページも入れるべきか?
+    # '/api/',
+]
