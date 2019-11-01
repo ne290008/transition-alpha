@@ -42,6 +42,7 @@ class CustomUser(AbstractUser):
 
     class Meta(object):
         db_table = 'custom_user'
+        verbose_name = verbose_name_plural = 'ユーザー'
 
     # ユーザー名から NULL制約、ユニーク制約、入力必須制限を除去
     username = models.CharField(

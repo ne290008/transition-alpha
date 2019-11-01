@@ -1,20 +1,38 @@
+import uuid
+from django.contrib.auth import get_user_model
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
+from jsonfield import JSONField
 
-'''
+
 class Project(models.Model):
-    author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
-    track_data = models.BinaryField()
-    created_date = models.DateTimeField(
-            default=timezone.now)
-    updated_date = models.DateTimeField(
-            blank=True, null=True)
+    """プロジェクトモデル"""
+
+    class Meta:
+        db_table = 'project'
+        ordering = ['created_at']
+        verbose_name = verbose_name_plural = 'プロジェクト'
+        unique_together = ('project_name', 'author')
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,
+                          verbose_name='ID')
+    project_name = models.CharField(verbose_name='プロジェクト名', max_length=63)
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE,
+                               verbose_name='作成者')
+    melody_data = JSONField(verbose_name='メロディデータ', null=True)
+    artist = models.CharField(verbose_name='アーティスト', max_length=31)
+    key = models.CharField(verbose_name='キー', max_length=7)
+    beat_pattern = models.CharField(verbose_name='ビートパターン', max_length=1)
+    chord_prog = models.CharField(verbose_name='コード進行', max_length=63)
+    bpm = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(240)],
+                              verbose_name='BPM')
+    created_at = models.DateTimeField(verbose_name='作成日時', default=timezone.now)
+    updated_at = models.DateTimeField(verbose_name='更新日時', blank=True, null=True)
 
     def update(self):
-        self.updated_date = timezone.now()
+        self.updated_at = timezone.now()
         self.save()
 
     def __str__(self):
-        return self.title
-'''
+        return self.project_name

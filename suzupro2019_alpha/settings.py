@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -170,6 +172,7 @@ EMAIL_HOST_PASSWORD = 'gmailのパスワード'
 EMAIL_USE_TLS = True
 '''
 
+
 # ログインしなくてもよいページのURLを記述
 PUBLIC_PATHS = [
     '/accounts/login/',
@@ -177,3 +180,10 @@ PUBLIC_PATHS = [
     # apiページも入れるべきか?
     # '/api/',
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}

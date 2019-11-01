@@ -1,8 +1,9 @@
-from rest_framework import serializers
-
-#from daw.lib.test_lib import test_method
 from daw.lib.suggester import generate_chord_prog
 from daw.lib.keys import major_keys, minor_keys
+from daw.models import Project
+from django.contrib.auth import get_user_model
+from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 
 keys = major_keys + minor_keys
 artists = ('hoge', 'fuga', 'piyo', 'foo', 'bar', 'buz')
@@ -19,3 +20,22 @@ class ChordProgressionSerializer(serializers.Serializer):
     def get_chord_progression(self, obj):
         # とりあえずIのコードから始めるようにしている(第3引数)
         return generate_chord_prog(obj['artist'], obj['key'], obj['key'])
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    """プロジェクトデータ用のシリアライザ"""
+
+    author_email = serializers.ReadOnlyField(source='author.email')
+    melody_data = serializers.JSONField(label='メロディデータ', allow_null=True)
+
+    class Meta:
+        model = Project
+        exclude = ['author', 'created_at', 'updated_at']
+        validators = [
+            # authorとproject_nameでユニークになっていることを検証
+            UniqueTogetherValidator(
+                queryset = Project.objects.all(),
+                fields = ('author', 'project_name'),
+                message='作成者とプロジェクト名でユニークになっていなければいけません。'
+            ),
+        ]
