@@ -1,15 +1,16 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+from .models import Project
 
-# TODO: クラスベースのビューに書き換える
 
-def index(request):
-    return render(request, 'daw/index.html', {})
+class ProjectEditView(View):
+    def get(self, request, *args, **kwargs):
+        project_id = kwargs['id']
+        projects = Project.objects.filter(author=request.user)
+        project = get_object_or_404(projects, id=project_id)
+        context = {
+            'project': project,
+        }
+        return render(request, 'daw/DAW.html', context)
 
-def daw_start(request):
-    return render(request, 'daw/start.html', {})
-
-def daw_new(request):
-    return render(request, 'daw/DAW.html', {})
-
-def daw_edit(request):
-    return render(request, 'daw/DAW.html', {})
+daw_edit = ProjectEditView.as_view()

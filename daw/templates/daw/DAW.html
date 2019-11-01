@@ -20,15 +20,19 @@
 
       // 遷移時に値を保持する
       // TODO: DAWのデータを保存するところでSessionStorageをclearすべき
-      artist = window.sessionStorage.getItem('artist');
-      key = window.sessionStorage.getItem('key');
-      beat = window.sessionStorage.getItem('beat');
-      chordProg = window.sessionStorage.getItem('chords');
+      const artist = window.sessionStorage.getItem('artist');
+      const key = window.sessionStorage.getItem('key');
+      const beat = window.sessionStorage.getItem('beat');
+      const chordProg = window.sessionStorage.getItem('chords');
       // 確認用
       console.log('artist: ' + artist);
       console.log('key: ' + key);
       console.log('beat: ' + beat);
       console.log('chordProg: ' + chordProg);
+
+      // メロディの取り出し確認用
+      var test_Melody = {{ project.melody_data|safe|default:"[]" }}
+      console.log(test_Melody)
     </script>
     <!--以下inst_bar-->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">

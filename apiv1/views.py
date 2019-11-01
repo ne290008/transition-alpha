@@ -52,8 +52,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         # シリアライザではauthorを設定できないため、
         # 明示的に新しいインスタンスを生成してシリアライザに渡す
-        pj = Project(author=request.user, melody_data='null')
-        serializer = self.serializer_class(pj, data=request.data)
+        project = Project(author=request.user)
+        serializer = self.serializer_class(project, data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
