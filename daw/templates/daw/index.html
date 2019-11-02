@@ -1,31 +1,61 @@
 {% load static %}
 
-<html lang ="jp">
+<html lang ="ja">
   <head>
     <meta charset="utf-8">
     <title>project select</title>
     <link href="{% static 'daw/css/index.css' %}"rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+      $(function(){
+        var your_project = [
+          {name: "光について", date: "2019/10/31 21:00:33"},
+          {name: "Nobady's Home", date: "2019/11/01 22:10:21"},
+          {name: "雨天決行", date: "2019/12/26 08:34:02"}
+        ];
+        for(var x=0; x<your_project.length; x++){
+          $(".pro_list").append("<li>");
+        }
+        for(x=0; x<your_project.length; x++){
+          $(".pro_list li").eq(x).append("<span class=\"pro_name\">"+your_project[x].name);
+          $(".pro_list li").eq(x).append("<span class=\"pro_date\">"+your_project[x].date);
+        }
+
+        $(".open_project").click(function(){
+          $(".open_pro_window").css("display", "block");
+        });
+        $(".times").click(function(){
+          $(".open_pro_window").css("display", "none");
+        });
+      });
+    </script>
   </head>
     <body>
       <div class="main">
         <header class="Top_title">
-            <h1>Project select</h1>
+          <h1>Project select</h1>
         </header>
         <div class="user_name">
             <p>ようこそ {{ user.get_username }} さん</p>
             <p><a href="{% url 'account_logout' %}">ログアウト</a></p>
         </div>
         <div class="project_select">
-            <a href="{% url 'daw_start' %}">
-              <p class="project_item">Create New
-                <br>
-                <img src="{% static 'daw/images/piano.svg' %}" width="150" height="150">
-              </p>
-            </a>
-            <p class="project_item">Open Project
-            <img src="{% static 'daw/images/music_icon.svg' %}" width="150" height="150">
+          <a href="{% url 'daw_start' %}">
+            <p class="project_item">Create New
+              <br>
+            <img src="{% static 'daw/images/piano.svg' %}" width="150" height="150">
             </p>
+          </a>
+          <p class="project_item open_project">Open Project
+          <img src="{% static 'daw/images/music_icon.svg' %}" width="150" height="150">
+          </p>
+        </div>
+        <div class="open_pro_window">
+          <p class="times">
+            <i class="fas fa-times fa-2x"></i>
+          </p>
+          <ul class="pro_list"></ul>
         </div>
       </div>
     </body>

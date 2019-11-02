@@ -20,7 +20,7 @@ h1 {
     text-align: center;
     padding: 0.8em 0;
 }
-h2{ 
+h2{
     font-size: 24px;
     text-align: center;
 }
@@ -36,7 +36,7 @@ h2{
     background-color: white;
     border: 1px solid black;
     padding: 10px 55px;
-    text-align: center;     
+    text-align: center;
 }
 .Progress_number:hover{
     opacity: 0.8;
@@ -74,6 +74,9 @@ h2{
     line-height: 200px;
     margin: 10px 0;
     cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
 }
 .artists_item:hover{
     opacity: 0.8;
@@ -81,12 +84,7 @@ h2{
 .artists_is-select{
     background-color: aquamarine;
 }
-.artists_item p{
-    font-size: 20px;
-    font-weight: bold;
-    color: #333;
-    margin: 0;
-}
+
 .start_next-btn{
     width: 200px;
     height: 75px;
@@ -116,7 +114,7 @@ h2{
     text-align: center;
     line-height: 75px;
     cursor: pointer;
-    
+
     font-size: 18px;
     font-weight: bold;
     color: #333;
@@ -142,7 +140,7 @@ h2{
     border-radius: 20px;
     text-align: center;
     line-height: 250px;
-    
+
     font-size: 32px;
     font-weight: bold;
     color: #333;
@@ -162,7 +160,7 @@ h2{
 
 .bpm_changer{
     text-align: center;
-    
+
 }
 .bpm_changer p{
     font-size: 20px;

@@ -1,180 +1,110 @@
 {% load static %}
 
 <html lang="ja">
-    <head>
-        <meta charset="utf-8">
-        <title>DAW Start</title>
-        <link rel="stylesheet" type="text/css" href="{% static 'daw/css/style_start.css' %}">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script>
-            jQuery(function($){
-                //タブ管理 & nextボタン
-                var next_index = 0;
-                var pages_index = 2;
-                var select_flg = [0];
-                //タブ管理
-                $('.Progress_number').click(function(){
-                    if(select_flg[0] == 1 && select_flg[1] == 1 && select_flg[2] == 1){
-                        $('.is-active').removeClass('is-active');
-                        $(this).addClass('is-active');
-                        $('.is-show').removeClass('is-show');
-                        pages_index = $(this).index();
-                        $('.start_page').eq(pages_index).addClass('is-show');
-                        next_index = $(this).index();
-                    }
-                });
-                //nextボタン
-                $(".start_next-btn").click(function(){
-                    if(next_index <= 2){
-                        if(select_flg[next_index] > 0){
-                            next_index = next_index + 1;
-                            $('.is-active').removeClass('is-active');
-                            $('.Progress_number').eq(next_index).addClass('is-active');
-                            $('.is-show').removeClass('is-show');
-                            $('.start_page').eq(next_index).addClass('is-show');
-                        } else {
-                            alert("選択してください。");
-                        }
-                    } else {
-                        window.sessionStorage.clear();
-                        const artist = 'Spitz';
-                        const key = 'C';
-                        const beat = 'B';
-                        const chords = 'Dm Am Bb F';
-                        window.sessionStorage.setItem(['artist'], [artist]);
-                        window.sessionStorage.setItem(['key'], [key]);
-                        window.sessionStorage.setItem(['beat'], [beat]);
-                        window.sessionStorage.setItem(['chords'], [chords]);
-                        location.href = "{% url 'daw_new' %}";
-                    }
-                });
-                //artistボタン
-                $(".artists_item").click(function(){
-                    $(".artists_is-select").removeClass("artists_is-select");
-                    $(this).addClass('artists_is-select');
-                    select_flg[0] = 1;
-                });
-                //keyボタン
-                $(".keys_item").click(function(){
-                    $(".keys_is-select").removeClass("keys_is-select");
-                    $(this).addClass('keys_is-select');
-                    select_flg[1] = 1;
-                });
-                //beatボタン
-                $(".beats_item").click(function(){
-                    $(".beats_is-select").removeClass("beats_is-select");
-                    $(this).addClass('beats_is-select');
-                    select_flg[2] = 1;
-                });
-            });
-        </script>
-    </head>
-    <body>
-        <div class="main">
-            <header class="Top_title">
-                <h1>DAW prototype</h1>
-            </header>
-            <section id="Progress_bar">
-                <div class="Progress_number is-active">
-                    <p>1</p>
+  <head>
+    <meta charset="utf-8">
+    <title>DAW Start</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'daw/css/style_start.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+      //共用変数
+      var artist = "none";
+      var key = "none";
+      var rhythm_pattern = "none";
+      var chord_prog = "none";
+      var daw_new = "{% url 'daw_new' %}";
+    </script>
+    <script src="{% static 'daw/js/start/prog_control.js' %}"></script>
+    <script src="{% static 'daw/js/start/demo.js' %}"></script>
+  </head>
+  <body>
+    <div class="main">
+        <header class="Top_title">
+            <h1>DAW prototype</h1>
+        </header>
+        <section id="Progress_bar">
+            <div class="Progress_number is-active">
+                <p>1</p>
+            </div>
+            <div class="Progress_number">
+                <p>2</p>
+            </div>
+            <div class="Progress_number">
+                <p>3</p>
+            </div>
+            <div class="Progress_number">
+                <p>4</p>
+            </div>
+        </section>
+        <section id="start_pages">
+            <div class="start_page is-show">
+                <h2>Select Fav Artist</h2>
+                <div class="Select_artist">
+                  <p class="artists_item">椎名林檎</p>
+                  <p class="artists_item">ART-SCHOOL</p>
+                  <p class="artists_item">あいみょん</p>
+                  <p class="artists_item">ELLEGARDEN</p>
+                  <p class="artists_item">スキマスイッチ</p>
+                  <p class="artists_item">チャットモンチー</p>
+                  <p class="artists_item">MONGOL800</p>
+                  <p class="artists_item">コブクロ</p>
+                  <p class="artists_item">Mr.Children</p>
                 </div>
-                <div class="Progress_number">
-                    <p>2</p>
+                <div class="start_next-btn">
+                    <p>Next</p>
                 </div>
-                <div class="Progress_number">
-                    <p>3</p>
+            </div>
+            <div class="start_page">
+                <h2>Select Fav Key</h2>
+                <div class="Select_key">
+                    <p class="keys_item">C/Am</p>
+                    <p class="keys_item">Db/Bbm</p>
+                    <p class="keys_item">D/Bm</p>
+                    <p class="keys_item">Eb/Cm</p>
+                    <p class="keys_item">E/Dbm</p>
+                    <p class="keys_item">F/Dm</p>
+                    <p class="keys_item">Gb/Ebm</p>
+                    <p class="keys_item">G/Em</p>
+                    <p class="keys_item">Ab/Fm</p>
+                    <p class="keys_item">A/Gbm</p>
+                    <p class="keys_item">Bb/Gm</p>
+                    <p class="keys_item">B/Abm</p>
                 </div>
-                <div class="Progress_number">
-                    <p>4</p>
+                <div class="start_next-btn">
+                    <p>Next</p>
                 </div>
-            </section>
-            <section id="start_pages">
-                <div class="start_page is-show">
-                    <h2>Select Fav Artist</h2>
-                    <div class="Select_artist">
-                        <div class="artists_item">
-                            <p class="Artist_name">ART-SCHOOL</p>
-                        </div>
-                        <div class="artists_item">
-                            <p class="Artist_name">Spitz</p>
-                        </div>
-                        <div class="artists_item">
-                            <p class="Artist_name">LOW IQ 01</p>
-                        </div>
-                        <div class="artists_item">
-                            <p class="Artist_name">HUSKING BEE</p>
-                        </div>
-                        <div class="artists_item">
-                            <p class="Artist_name">the band apart</p>
-                        </div>
-                        <div class="artists_item">
-                            <p class="Artist_name">The Beatles</p>
-                        </div>
-                        <div class="artists_item">
-                            <p class="Artist_name">andy mori</p>
-                        </div>
-                        <div class="artists_item">
-                            <p class="Artist_name">Radio head</p>
-                        </div>
-                        <div class="artists_item">
-                            <p class="Artist_name">Mr.children</p>
-                        </div>
-                    </div>
-                    <div class="start_next-btn">
-                        <p>Next</p>
-                    </div>
+            </div>
+            <div class="start_page">
+                <h2>Select Fav Beat</h2>
+                <div class="Select_beat">
+                    <p class="beats_item">A</p>
+                    <p class="beats_item">B</p>
+                    <p class="beats_item">C</p>
                 </div>
-                <div class="start_page">
-                    <h2>Select Fav Key</h2>
-                    <div class="Select_key">
-                        <p class="keys_item">C/Am</p>
-                        <p class="keys_item">Db/Bbm</p>
-                        <p class="keys_item">D/Bm</p>
-                        <p class="keys_item">Eb/Cm</p>
-                        <p class="keys_item">E/Dbm</p>
-                        <p class="keys_item">F/Dm</p>
-                        <p class="keys_item">Gb/Ebm</p>
-                        <p class="keys_item">G/Em</p>
-                        <p class="keys_item">Ab/Fm</p>
-                        <p class="keys_item">A/Gbm</p>
-                        <p class="keys_item">Bb/Gm</p>
-                        <p class="keys_item">B/Abm</p>
-                    </div>
-                    <div class="start_next-btn">
-                        <p>Next</p>
-                    </div>
+                <div class="beat_seekbar">
+                    <audio controls>
+                    </audio>
                 </div>
-                <div class="start_page">
-                    <h2>Select Fav Beat</h2>
-                    <div class="Select_beat">
-                        <p class="beats_item">A</p>
-                        <p class="beats_item">B</p>
-                        <p class="beats_item">C</p>
-                    </div>
-                    <div class="beat_seekbar">
-                        <audio controls>
-                        </audio>
-                    </div>
-                    <div class="start_next-btn">
-                        <p>Next</p>
-                    </div>
+                <div class="start_next-btn">
+                    <p>Next</p>
                 </div>
-                <div class="start_page">
-                    <h2>Created DEMO!</h2>
-                    <div class="bpm_changer">
-                        <p>BPM</p>
-                        <input class="bpm_number" type="number" value="120">
-                    </div>
-                    <div class="demo_seekbar">
-                        <audio controls>
-                        </audio>
-                    </div>
-                    <p class="suggested_chords"></p>
-                    <div class="start_next-btn">
-                        <p>Start</p>
-                    </div>
+            </div>
+            <div class="start_page">
+                <h2>Created DEMO!</h2>
+                <div class="bpm_changer">
+                    <p>BPM</p>
+                    <input class="bpm_number" type="number" value="120">
                 </div>
-            </section>
-        </div>
-    </body>
+                <div class="demo_seekbar">
+                    <audio controls>
+                    </audio>
+                </div>
+                <p class="suggested_chords"></p>
+                <div class="start_next-btn">
+                    <p>Start</p>
+                </div>
+            </div>
+        </section>
+    </div>
+  </body>
 </html>

@@ -21,6 +21,7 @@ boby{
 
 /*Menubar*/
 .menu_bar{
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -84,7 +85,7 @@ td.extime{
   color: white;
 }
 
-/*saveボタン*/
+/*saveボタン・ウィンドウ*/
 .save-button{
   margin: 0;
   padding-left: 20px;
@@ -103,6 +104,50 @@ td.extime{
   -moz-user-select: none; /* Firefox */
   -webkit-user-select: none; /* Safari、Chromeなど */
   -ms-user-select: none; /* IE10かららしi */
+}
+.save-window{
+  position: absolute;
+  display: none;
+  top: 50%;
+  left: 50%;
+  background-color: #efefef;
+  border-radius: 10px;
+  width: 400px;
+  height: 300px;
+  transform : translate(-50%, -50%);
+  z-index: 1000;
+  padding: 75px;
+}
+.save-window p{
+  text-align: center;
+}
+.times{
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  margin: 10px;
+}
+.save_info{
+  display: block;
+}
+.save_info form{
+  text-align: center;
+}
+.save_buttons{
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  padding-top: 20px;
+}
+.save_buttons > p{
+  color: white;
+  padding: 10px 20px;
+  background-color: #888;
+  border-radius: 5px;
+}
+.new_save-btn:hover{
+  opacity: 0.8;
 }
 
 /*helpボタン*/
