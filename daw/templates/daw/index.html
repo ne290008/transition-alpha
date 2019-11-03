@@ -49,6 +49,11 @@
             $(".times").click(function(){
               $(".open_pro_window").css("display", "none");
             });
+            $(".pro_list li").click(function(){
+              id = your_project[$(".pro_list li").index(this)].id;
+              url = "{% url 'daw_edit' '88888888-4444-4444-4444-121212121212' %}".replace(/88888888-4444-4444-4444-121212121212/, id);
+              location.href = url;
+            });
           });
         });
     </script>
