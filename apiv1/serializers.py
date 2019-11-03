@@ -30,7 +30,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        exclude = ['author', 'created_at', 'updated_at']
+        exclude = ['author']
         validators = [
             # authorとproject_nameでユニークになっていることを検証
             UniqueTogetherValidator(
@@ -39,3 +39,11 @@ class ProjectSerializer(serializers.ModelSerializer):
                 message='作成者とプロジェクト名でユニークになっていなければいけません。'
             ),
         ]
+        extra_kwargs = {
+            'created_at': {
+                'read_only': True,
+            },
+            'updated_at': {
+                'read_only': True,
+            },
+        }
