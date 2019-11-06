@@ -28,10 +28,11 @@ jQuery(function($){
             }
         } else {
           window.sessionStorage.clear();
-          window.sessionStorage.setItem(['artist'], [artist]);
-          window.sessionStorage.setItem(['key'], [key]);
-          window.sessionStorage.setItem(['rhythm_pattern'], [rhythm_pattern]);
-          window.sessionStorage.setItem(['chord_prog'], [chord_prog]);
+          window.sessionStorage.setItem('artist', artist);
+          window.sessionStorage.setItem('key', key);
+          window.sessionStorage.setItem('rhythm_pattern', rhythm_pattern);
+          window.sessionStorage.setItem('chord_prog', chord_prog);
+          window.sessionStorage.setItem('bpm', bpm);
           location.href = daw_new;
         }
     });

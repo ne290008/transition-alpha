@@ -14,7 +14,7 @@ from pychord.analyzer import notes_to_positions
 from pychord.constants import QUALITY_DICT as QD
 from pychord.utils import note_to_val
 
-from .keys import major_keys, minor_keys, minor_major_keys
+from .constants import major_keys, minor_keys, minor_major_keys
 
 # QUALITY_DICT optimization
 # REVIEW: chord-suggesterで出されるコードは一応対応のはず

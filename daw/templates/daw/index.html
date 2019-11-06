@@ -18,19 +18,25 @@
       })
         .then(response => {
           // console.log(response);
-          response.forEach((elem) => {
+          response.forEach(elem => {
             const id = elem.id;
             const project_name = elem.project_name;
             const created_at = elem.created_at;
             const updated_at = elem.updated_at;
             let date;
-            if (updated_at) {
+            if(updated_at) {
               date = moment(updated_at).format("YYYY/MM/DD HH:mm:ss");
             } else {
               date = moment(created_at).format("YYYY/MM/DD HH:mm:ss");
             }
             your_project.push({id: id, name: project_name, date: date});
           });
+        })
+        .catch(error => {
+          // TODO: エラー時の処理も考えるべき
+          console.log('data load error');
+          console.log('status: ' + error.status);
+          console.log(error);
         })
         .then(() => {
           // console.log(your_project);

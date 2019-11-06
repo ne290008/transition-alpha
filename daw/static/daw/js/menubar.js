@@ -14,9 +14,13 @@ $("#save").click(function(){
 $(".times").click(function(){
   $(".save-window").css("display", "none");
 });
+if(project_name) {
+  document.getElementById('song_name_input').value = project_name;
+}
 $(".new_save-btn").click(function(){
   var song_name = document.getElementById("song_name_input").value;
   if(song_name.length > 0){
+    save(MIDI_Melody, song_name, artist, key, rhythm_pattern, chord_prog, bpm);
     alert("保存しました。");
     console.log(song_name);
     $(".save-window").css("display", "none");
@@ -27,6 +31,7 @@ $(".new_save-btn").click(function(){
 $(".ow_save-btn").click(function(){
   var song_name = document.getElementById("song_name_input").value;
   if(song_name.length > 0){
+    overwrite(project_id, MIDI_Melody, song_name, artist, key, rhythm_pattern, chord_prog, bpm);
     alert("保存しました。");
     console.log(song_name);
     $(".save-window").css("display", "none");
@@ -64,3 +69,37 @@ $('.bpm_slider').on('input change', function() {
   bpm = $(this).val();
   $('.bpm_value').html(bpm);
 });
+
+// データ更新用
+function overwrite(id, melody_data, project_name, artist, key, rhythm_pattern, chord_prog, bpm) {
+  $.ajax({
+    type: 'PUT',
+    url: '/api/v1/projects/' + id + '/',
+    dataType: 'json',
+    headers: {
+      'X-CSRFToken': token
+    },
+    data: {
+      'melody_data': JSON.stringify(melody_data),
+      'project_name': project_name,
+      'artist': artist,
+      'key': key,
+      'rhythm_pattern': rhythm_pattern,
+      'chord_prog': chord_prog,
+      'bpm': bpm,
+    },
+  })
+    .then(response => {
+      console.log('succeed');
+      console.log(response);
+    })
+    .catch(error => {
+      console.log('failed');
+      console.log(error);
+    });
+}
+
+function save(melody_data, project_name, artist, key, rhythm_pattern, chord_prog, bpm) {
+  // 未実装
+  console.log('ごめんなさい。未実装です。');
+}

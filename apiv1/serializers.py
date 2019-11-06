@@ -1,12 +1,11 @@
+from daw.lib.constants import artists, major_keys, minor_keys
 from daw.lib.suggester import generate_chord_prog
-from daw.lib.keys import major_keys, minor_keys
 from daw.models import Project
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 keys = major_keys + minor_keys
-artists = ('hoge', 'fuga', 'piyo', 'foo', 'bar', 'buz')
 
 
 class ChordProgressionSerializer(serializers.Serializer):

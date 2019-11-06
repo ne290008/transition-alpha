@@ -127,7 +127,8 @@ jQuery(function($){
   function addDrum(time, note) {
     Drum_sampler.triggerAttackRelease(note, '1n', time);
   }
-  var MIDI_Melody = []; //小節:拍:拍内小節, 音名 保存に使用
+  // var MIDI_Melody = []; //小節:拍:拍内小節, 音名 保存に使用
+  // CHANGED: menubar.js内でも参照したいため、グローバル変数として定義
   for(x=0; x<notes_measure/16; x++){ //
     for(y=0; y<4; y++){
       for(z=0; z<4; z++){
@@ -373,7 +374,7 @@ jQuery(function($){
     {"time":"7:3:1", "note":[], "duration":"16n"},
     {"time":"7:3:2", "note":[""], "duration":"16n"},
     {"time":"7:3:3", "note":[], "duration":"16n"}
-  ];
+  ];*/
   var Mscale_number = {"C":11, "C#":10, "D":9, "D#":8, "E":7, "F":6, "F#":5, "G":4, "G#":3, "A":2, "A#":1, "B":0}; //逆順
   for(y=0; y<test_Melody.length; y++){
     if(test_Melody[y].note.length > 0 && test_Melody[y].note[0] != ""){
@@ -395,9 +396,8 @@ jQuery(function($){
       }
     }
   }
-  console.log("保存データ読み込み")
+  console.log("保存データ読み込み");
   console.log(MIDI_Melody);
-  */
 
   //コード(文字列からの生成)
   //受け渡されるデータ(コードストローク、ドラムパターン)

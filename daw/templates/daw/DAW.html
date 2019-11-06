@@ -16,23 +16,43 @@
     <script type="text/javascript">
       var mute_flg = [0, 0, 0, 0];
       var play_flg = 0;
-      var bpm = 120;
+      var MIDI_Melody = [];
 
-      // 遷移時に値を保持する
-      // TODO: DAWのデータを保存するところでSessionStorageをclearすべき
-      const artist = window.sessionStorage.getItem('artist');
-      const key = window.sessionStorage.getItem('key');
-      const rhythm_pattern = window.sessionStorage.getItem('rhythm_pattern');
-      const chord_prog = window.sessionStorage.getItem('chord_prog');
+      // CSRF対策
+      const token = '{{csrf_token}}';
+
+      // TODO: 画面遷移時にSessionStorageをclearすべき（unloadとか使って）
+
+      // データの取得
+      // メロディデータの取り出し
+      var test_Melody = {{ project.melody_data|default:'[]'|safe }};
+      // メロディの取り出し確認用
+      console.log(test_Melody);
+      // パス名から新規作成or更新を判断する
+      if(location.pathname == "{% url 'daw_new' %}") {
+        // 新規作成画面での処理
+        var artist = window.sessionStorage.getItem('artist');
+        var key = window.sessionStorage.getItem('key');
+        var rhythm_pattern = window.sessionStorage.getItem('rhythm_pattern');
+        var chord_prog = window.sessionStorage.getItem('chord_prog');
+        var bpm = parseInt(window.sessionStorage.getItem('bpm'));
+      } else {
+        // 更新画面での処理
+        var project_id = "{{ project.id }}";
+        var project_name = "{{ project.project_name }}";
+        var artist = "{{ project.artist }}";
+        var key = "{{ project.key }}";
+        var rhythm_pattern = "{{ project.rhythm_pattern }}";
+        var chord_prog = "{{ project.chord_prog }}";
+        var bpm = parseInt("{{ project.bpm }}");
+      }
       // 確認用
       console.log('artist: ' + artist);
       console.log('key: ' + key);
       console.log('rhythm_pattern: ' + rhythm_pattern);
       console.log('chord_prog: ' + chord_prog);
-
-      // メロディの取り出し確認用
-      var test_Melody = {{ project.melody_data|safe|default:"[]" }}
-      console.log(test_Melody)
+      console.log('bpm: ' + bpm);
+      console.log(typeof(bpm));
       </script>
       <!--以下inst_bar-->
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
