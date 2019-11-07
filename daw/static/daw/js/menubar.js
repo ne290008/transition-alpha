@@ -71,6 +71,7 @@ $('.bpm_slider').on('input change', function() {
 });
 
 // データ更新用
+// HACK: 例外処理のしやすさからPromiseオブジェクトにすべき
 function overwrite(id, melody_data, project_name, artist, key, rhythm_pattern, chord_prog, bpm) {
   $.ajax({
     type: 'PUT',
@@ -99,7 +100,32 @@ function overwrite(id, melody_data, project_name, artist, key, rhythm_pattern, c
     });
 }
 
+// 新規作成用
+// HACK: 例外処理のしやすさからPromiseオブジェクトにすべき
 function save(melody_data, project_name, artist, key, rhythm_pattern, chord_prog, bpm) {
-  // 未実装
-  console.log('ごめんなさい。未実装です。');
+  $.ajax({
+    type: 'POST',
+    url: '/api/v1/projects/',
+    dataType: 'json',
+    headers: {
+      'X-CSRFToken': token
+    },
+    data: {
+      'melody_data': JSON.stringify(melody_data),
+      'project_name': project_name,
+      'artist': artist,
+      'key': key,
+      'rhythm_pattern': rhythm_pattern,
+      'chord_prog': chord_prog,
+      'bpm': bpm,
+    },
+  })
+    .then(response => {
+      console.log('succeed');
+      console.log(response);
+    })
+    .catch(error => {
+      console.log('failed');
+      console.log(error);
+    });
 }
