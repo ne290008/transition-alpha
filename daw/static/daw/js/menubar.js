@@ -63,6 +63,10 @@ $('#play').click(function() {
   }
 });
 
+/*作曲情報バー*/
+$('.artist').html(artist);
+$('.key').html(key);
+
 //BPM
 $('.bpm_value').html(bpm);
 $('.bpm_slider').on('input change', function() {

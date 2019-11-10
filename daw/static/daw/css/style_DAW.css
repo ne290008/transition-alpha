@@ -5,6 +5,14 @@ html{
 boby{
   background-color: white;
 }
+ul{
+  padding: 0;
+  margin: 0;
+}
+li{
+  list-style: none;
+  margin: 0;
+}
 .main{
   background-color: #aaa;
   width: 100%;
@@ -310,6 +318,22 @@ label span{
     width: 80%;
     margin: 8px 0;
 }
+.effect_list{
+  margin: 0;
+  padding: 10px 0 0 0;
+}
+.effect_list li{
+  width: 90%;
+  border-bottom: 1px solid #333;
+  margin: 0 auto 8px auto;
+}
+.effect_list li:hover{
+  cursor: pointer;
+  opacity: 0.8;
+}
+.ef_selected{
+  background-color: aquamarine;
+}
 
 /*MIDI input*/
 .MIDI_input{
@@ -382,6 +406,7 @@ label span{
 }
 .notes.ml_highlighted{
   background-color: blueviolet;
+  border-left: 1px solid blueviolet;
   border-right: 1px solid blueviolet;
 }
 .measure_first_notes{
