@@ -12,7 +12,8 @@
       var key = "none";
       var rhythm_pattern = "none";
       var chord_prog = "none";
-      var bpm = 120;
+      var bpm;
+      $(document).ready(() => bpm = document.getElementsByClassName('bpm_number')[0].value);
       // CSRF対策
       const token = '{{ csrf_token }}';
       const daw_new = "{% url 'daw_new' %}";

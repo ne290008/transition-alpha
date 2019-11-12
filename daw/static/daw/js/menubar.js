@@ -20,10 +20,20 @@ if(project_name) {
 $(".new_save-btn").click(function(){
   var song_name = document.getElementById("song_name_input").value;
   if(song_name.length > 0){
-    save(MIDI_Melody, song_name, artist, key, rhythm_pattern, chord_prog, bpm);
-    alert("保存しました。");
-    console.log(song_name);
-    $(".save-window").css("display", "none");
+    save(MIDI_Melody, song_name, artist, key, rhythm_pattern, chord_prog, bpm).then(response => {
+      // ここで成功時の処理
+      console.log('succeed');
+      console.log(response);
+      alert("保存しました。");
+      console.log(song_name);
+      $(".save-window").css("display", "none");
+    })
+    .catch(error => {
+      // ここで失敗時の処理
+      console.log('failed');
+      console.log(error);
+      alert("保存できませんでした。");
+    });
   }else{
     alert("ファイル名を入力してください。");
   }
@@ -31,10 +41,20 @@ $(".new_save-btn").click(function(){
 $(".ow_save-btn").click(function(){
   var song_name = document.getElementById("song_name_input").value;
   if(song_name.length > 0){
-    overwrite(project_id, MIDI_Melody, song_name, artist, key, rhythm_pattern, chord_prog, bpm);
-    alert("保存しました。");
-    console.log(song_name);
-    $(".save-window").css("display", "none");
+    overwrite(project_id, MIDI_Melody, song_name, artist, key, rhythm_pattern, chord_prog, bpm).then(response => {
+      // ここで成功時の処理
+      console.log('succeed');
+      console.log(response);
+      alert("保存しました。");
+      console.log(song_name);
+      $(".save-window").css("display", "none");
+    })
+    .catch(error => {
+      // ここで失敗時の処理
+      console.log('failed');
+      console.log(error);
+      alert("保存できませんでした。");
+    });
   }else{
     alert("ファイル名を入力してください。");
   }
@@ -75,61 +95,53 @@ $('.bpm_slider').on('input change', function() {
 });
 
 // データ更新用
-// HACK: 例外処理のしやすさからPromiseオブジェクトにすべき
+// CHANGED: 例外処理のしやすさからPromiseオブジェクトを返すように変更
 function overwrite(id, melody_data, project_name, artist, key, rhythm_pattern, chord_prog, bpm) {
-  $.ajax({
-    type: 'PUT',
-    url: '/api/v1/projects/' + id + '/',
-    dataType: 'json',
-    headers: {
-      'X-CSRFToken': token
-    },
-    data: {
-      'melody_data': JSON.stringify(melody_data),
-      'project_name': project_name,
-      'artist': artist,
-      'key': key,
-      'rhythm_pattern': rhythm_pattern,
-      'chord_prog': chord_prog,
-      'bpm': bpm,
-    },
-  })
-    .then(response => {
-      console.log('succeed');
-      console.log(response);
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: 'PUT',
+      url: '/api/v1/projects/' + id + '/',
+      dataType: 'json',
+      headers: {
+        'X-CSRFToken': token
+      },
+      data: {
+        'melody_data': JSON.stringify(melody_data),
+        'project_name': project_name,
+        'artist': artist,
+        'key': key,
+        'rhythm_pattern': rhythm_pattern,
+        'chord_prog': chord_prog,
+        'bpm': bpm,
+      },
     })
-    .catch(error => {
-      console.log('failed');
-      console.log(error);
-    });
+      .then(response => resolve(response))
+      .catch(error => reject(error));
+  });
 }
 
 // 新規作成用
-// HACK: 例外処理のしやすさからPromiseオブジェクトにすべき
+// CHANGED: 例外処理のしやすさからPromiseオブジェクトを返すように変更
 function save(melody_data, project_name, artist, key, rhythm_pattern, chord_prog, bpm) {
-  $.ajax({
-    type: 'POST',
-    url: '/api/v1/projects/',
-    dataType: 'json',
-    headers: {
-      'X-CSRFToken': token
-    },
-    data: {
-      'melody_data': JSON.stringify(melody_data),
-      'project_name': project_name,
-      'artist': artist,
-      'key': key,
-      'rhythm_pattern': rhythm_pattern,
-      'chord_prog': chord_prog,
-      'bpm': bpm,
-    },
-  })
-    .then(response => {
-      console.log('succeed');
-      console.log(response);
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: 'POST',
+      url: '/api/v1/projects/',
+      dataType: 'json',
+      headers: {
+        'X-CSRFToken': token
+      },
+      data: {
+        'melody_data': JSON.stringify(melody_data),
+        'project_name': project_name,
+        'artist': artist,
+        'key': key,
+        'rhythm_pattern': rhythm_pattern,
+        'chord_prog': chord_prog,
+        'bpm': bpm,
+      },
     })
-    .catch(error => {
-      console.log('failed');
-      console.log(error);
-    });
+      .then(response => resolve(response))
+      .catch(error => reject(error));
+  });
 }

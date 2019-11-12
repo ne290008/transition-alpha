@@ -57,4 +57,8 @@ jQuery(function($){
       rhythm_pattern = $(".beats_is-select").html();
       select_flg[2] = 1;
     });
+    //BPM
+    $('.bpm_number').change(function(){
+      bpm = $(this).val();
+    });
 });
