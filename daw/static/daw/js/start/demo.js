@@ -45,7 +45,6 @@ jQuery(function($){
   });
 });
 
-// CHANGED: 例外処理のしやすさからPromiseオブジェクトを返すように変更
 function generateChordProgression(artist, key) {
   return new Promise((resolve, reject) => {
     $.ajax({
