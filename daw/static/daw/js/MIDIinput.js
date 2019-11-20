@@ -117,10 +117,22 @@ jQuery(function($){
     "D#2" : "/static/daw/audio/Drum/Ride_Ds2.wav",
     "E2" : "/static/daw/audio/Drum/OH_E2.wav"
   }).toMaster();
+  function addMelody(time, note) {
+    polysynth_melody.triggerAttackRelease(note.note, note.duration, time);
+  }
+  function addChord(time, note) {
+    polysynth_chord.triggerAttackRelease(note.note, note.duration, time);
+  }
+  function addBass(time, note) {
+    plucksynth.triggerAttackRelease(note, '16n', time);
+  }
+  function addDrum(time, note) {
+    Drum_sampler.triggerAttackRelease(note, '1n', time);
+  }
 
   //エフェクト
-  var effect_selecter = [[1, 0, 1], [0, 1, 0], [0, 0, 0], [0, 0, 1]]
-  var ef_amount = 3;
+  var effect_selecter = [[1, 0, 1, 0, 0], [0, 1, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 1, 0, 0]]
+  var ef_amount = 5;
 
   var effect_list = [
     "", "", ""
@@ -128,7 +140,10 @@ jQuery(function($){
   effect_list[0] = new Tone.Freeverb().toMaster(); //リバーブ
   effect_list[1] = new Tone.Chorus().toMaster(); //コーラス
   effect_list[2] = new Tone.Distortion().toMaster(); //ディストーション
+  effect_list[3] = new Tone.FeedbackDelay().toMaster(); //ディレイ
+  effect_list[4] = new Tone.AutoWah(50, 6, -30).toMaster(); //ワウ
 
+  //エフェクトのコントロール
   function ef_control(inst, idx, load){ //配列の値が1ならエフェクトオン loadなら処理をスキップ
     if(inst == 0){ //Melody
       if(effect_selecter[inst][idx] == 1){
@@ -189,18 +204,6 @@ jQuery(function($){
     console.log(effect_selecter);
   });
 
-  function addMelody(time, note) {
-    polysynth_melody.triggerAttackRelease(note.note, note.duration, time);
-  }
-  function addChord(time, note) {
-    polysynth_chord.triggerAttackRelease(note.note, note.duration, time);
-  }
-  function addBass(time, note) {
-    plucksynth.triggerAttackRelease(note, '16n', time);
-  }
-  function addDrum(time, note) {
-    Drum_sampler.triggerAttackRelease(note, '1n', time);
-  }
   // var MIDI_Melody = []; //小節:拍:拍内小節, 音名 保存に使用
   // CHANGED: menubar.js内でも参照したいため、グローバル変数として定義
   for(x=0; x<notes_measure/16; x++){ //
@@ -346,7 +349,7 @@ jQuery(function($){
 
   //受け渡された情報からメロディを表示する 読み込みに使用
   //Polysynthは和音に対応 三次元配列で記述可
-  /*
+  // OPTIMIZE: アプリケーションとしては不要となるため削除すべき
   var test_Melody = [
     {"time":"0:0:0", "note":["A5"], "duration":"16n"},
     {"time":"0:0:1", "note":[""], "duration":"16n"},
@@ -477,172 +480,42 @@ jQuery(function($){
     {"time":"7:3:2", "note":[""], "duration":"16n"},
     {"time":"7:3:3", "note":[], "duration":"16n"}
   ];
-  */
   var Mscale_number = {"C":11, "C#":10, "D":9, "D#":8, "E":7, "F":6, "F#":5, "G":4, "G#":3, "A":2, "A#":1, "B":0}; //逆順
-  for(y=0; y<test_Melody.length; y++){
-    if(test_Melody[y].note.length > 0 && test_Melody[y].note[0] != ""){
-      for(z=0; z<test_Melody[y].note.length; z++){
-        if(MIDI_Melody[y].note == ""){ //音情報
-          MIDI_Melody[y].note.splice(0, 1, test_Melody[y].note[0]);
-        }else{
-          MIDI_Melody[y].note.push(test_Melody[y].note[z]);
+
+  // CHANGED: メロディデータを引数として受け取るように変更
+  function Melody_display(melody){
+    for(y=0; y<melody.length; y++){
+      if(melody[y].note.length > 0 && melody[y].note[0] != ""){
+        for(z=0; z<melody[y].note.length; z++){
+          if(MIDI_Melody[y].note == ""){ //音情報
+            MIDI_Melody[y].note.splice(0, 1, melody[y].note[0]);
+          }else{
+            MIDI_Melody[y].note.push(melody[y].note[z]);
+          }
+          var pitch = melody[y].note[z].slice(-1);
+          if(melody[y].note[z].length == 3){ //C#3
+            var note_name = melody[y].note[z].slice(0, 2);
+          }else{
+            var note_name = melody[y].note[z].slice(0, 1);
+          }
+          $(".notes").eq( //highlighted
+            Mscale_number[note_name] + (6-pitch)*12 + y*MIDI_Mscale
+          ).addClass("highlighted");
         }
-        var pitch = test_Melody[y].note[z].slice(-1);
-        if(test_Melody[y].note[z].length == 3){ //C#3
-          var note_name = test_Melody[y].note[z].slice(0, 2);
-        }else{
-          var note_name = test_Melody[y].note[z].slice(0, 1);
-        }
-        $(".notes").eq( //highlighted
-          Mscale_number[note_name] + (6-pitch)*12 + y*MIDI_Mscale
-        ).addClass("highlighted");
       }
     }
-  }
-  console.log("保存データ読み込み");
-  console.log(MIDI_Melody);
+    console.log("保存データ読み込み")
+    console.log(MIDI_Melody);
+  };
+  Melody_display(melody);  // テスト時はtest_Melodyを渡すとよい
+
 
   //コード(文字列からの生成)
   //受け渡されるデータ(コードストローク、ドラムパターン)
   var rhythm_pattern = "A"; //A,B,Cのいずれか
   var test_chord2_original = "Dm Am Bb F"; //Chainerからの出力
-
-  if(rhythm_pattern == "A"){
-    var chord_stroke = [ //CMaj基準
-      {"time":"0:0:0", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"0:0:1", "note":[""], "duration":"16n"},
-      {"time":"0:0:2", "note":[], "duration":"16n"},
-      {"time":"0:0:3", "note":[], "duration":"16n"},
-      {"time":"0:1:0", "note":[47, 43, 40], "duration":"16n"},
-      {"time":"0:1:1", "note":[], "duration":"16n"},
-      {"time":"0:1:2", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"0:1:3", "note":[""], "duration":"16n"},
-      {"time":"0:2:0", "note":[""], "duration":"16n"},
-      {"time":"0:2:1", "note":[""], "duration":"16n"},
-      {"time":"0:2:2", "note":[47, 43, 40], "duration":"16n"},
-      {"time":"0:2:3", "note":[""], "duration":"16n"},
-      {"time":"0:3:0", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"0:3:1", "note":[""], "duration":"16n"},
-      {"time":"0:3:2", "note":[], "duration":"16n"},
-      {"time":"0:3:3", "note":[""], "duration":"16n"},
-      {"time":"1:0:0", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"1:0:1", "note":[""], "duration":"16n"},
-      {"time":"1:0:2", "note":[], "duration":"16n"},
-      {"time":"1:0:3", "note":[], "duration":"16n"},
-      {"time":"1:1:0", "note":[47, 43, 40], "duration":"16n"},
-      {"time":"1:1:1", "note":[], "duration":"16n"},
-      {"time":"1:1:2", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"1:1:3", "note":[""], "duration":"16n"},
-      {"time":"1:2:0", "note":[""], "duration":"16n"},
-      {"time":"1:2:1", "note":[""], "duration":"16n"},
-      {"time":"1:2:2", "note":[47, 43, 40], "duration":"16n"},
-      {"time":"1:2:3", "note":[""], "duration":"16n"},
-      {"time":"1:3:0", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"1:3:1", "note":[""], "duration":"16n"},
-      {"time":"1:3:2", "note":[], "duration":"16n"},
-      {"time":"1:3:3", "note":[""], "duration":"16n"},
-      {"time":"2:0:0", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"2:0:1", "note":[""], "duration":"16n"},
-      {"time":"2:0:2", "note":[], "duration":"16n"},
-      {"time":"2:0:3", "note":[], "duration":"16n"},
-      {"time":"2:1:0", "note":[47, 43, 40], "duration":"16n"},
-      {"time":"2:1:1", "note":[], "duration":"16n"},
-      {"time":"2:1:2", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"2:1:3", "note":[""], "duration":"16n"},
-      {"time":"2:2:0", "note":[""], "duration":"16n"},
-      {"time":"2:2:1", "note":[""], "duration":"16n"},
-      {"time":"2:2:2", "note":[47, 43, 40], "duration":"16n"},
-      {"time":"2:2:3", "note":[""], "duration":"16n"},
-      {"time":"2:3:0", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"2:3:1", "note":[""], "duration":"16n"},
-      {"time":"2:3:2", "note":[], "duration":"16n"},
-      {"time":"2:3:3", "note":[""], "duration":"16n"},
-      {"time":"3:0:0", "note":[47, 43, 40], "duration":"16n"},
-      {"time":"3:0:1", "note":[""], "duration":"16n"},
-      {"time":"3:0:2", "note":[], "duration":"16n"},
-      {"time":"3:0:3", "note":[], "duration":"16n"},
-      {"time":"3:1:0", "note":[47, 43, 40], "duration":"16n"},
-      {"time":"3:1:1", "note":[], "duration":"16n"},
-      {"time":"3:1:2", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"3:1:3", "note":[""], "duration":"16n"},
-      {"time":"3:2:0", "note":[""], "duration":"16n"},
-      {"time":"3:2:1", "note":[""], "duration":"16n"},
-      {"time":"3:2:2", "note":[47, 43, 40], "duration":"16n"},
-      {"time":"3:2:3", "note":[""], "duration":"16n"},
-      {"time":"3:3:0", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"3:3:1", "note":[""], "duration":"16n"},
-      {"time":"3:3:2", "note":[], "duration":"16n"},
-      {"time":"3:3:3", "note":[""], "duration":"16n"},
-      {"time":"4:0:0", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"4:0:1", "note":[""], "duration":"16n"},
-      {"time":"4:0:2", "note":[], "duration":"16n"},
-      {"time":"4:0:3", "note":[], "duration":"16n"},
-      {"time":"4:1:0", "note":[47, 43, 40], "duration":"16n"},
-      {"time":"4:1:1", "note":[], "duration":"16n"},
-      {"time":"4:1:2", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"4:1:3", "note":[""], "duration":"16n"},
-      {"time":"4:2:0", "note":[""], "duration":"16n"},
-      {"time":"4:2:1", "note":[""], "duration":"16n"},
-      {"time":"4:2:2", "note":[47, 43, 40], "duration":"16n"},
-      {"time":"4:2:3", "note":[""], "duration":"16n"},
-      {"time":"4:3:0", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"4:3:1", "note":[""], "duration":"16n"},
-      {"time":"4:3:2", "note":[], "duration":"16n"},
-      {"time":"4:3:3", "note":[""], "duration":"16n"},
-      {"time":"5:0:0", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"5:0:1", "note":[""], "duration":"16n"},
-      {"time":"5:0:2", "note":[], "duration":"16n"},
-      {"time":"5:0:3", "note":[], "duration":"16n"},
-      {"time":"5:1:0", "note":[47, 43, 40], "duration":"16n"},
-      {"time":"5:1:1", "note":[], "duration":"16n"},
-      {"time":"5:1:2", "note":[47, 43, 40], "duration":"16n"},
-      {"time":"5:1:3", "note":[""], "duration":"16n"},
-      {"time":"5:2:0", "note":[""], "duration":"16n"},
-      {"time":"5:2:1", "note":[""], "duration":"16n"},
-      {"time":"5:2:2", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"5:2:3", "note":[""], "duration":"16n"},
-      {"time":"5:3:0", "note":[47, 43, 40], "duration":"16n"},
-      {"time":"5:3:1", "note":[""], "duration":"16n"},
-      {"time":"5:3:2", "note":[], "duration":"16n"},
-      {"time":"5:3:3", "note":[""], "duration":"16n"},
-      {"time":"6:0:0", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"6:0:1", "note":[""], "duration":"16n"},
-      {"time":"6:0:2", "note":[], "duration":"16n"},
-      {"time":"6:0:3", "note":[], "duration":"16n"},
-      {"time":"6:1:0", "note":[47, 43, 40], "duration":"16n"},
-      {"time":"6:1:1", "note":[], "duration":"16n"},
-      {"time":"6:1:2", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"6:1:3", "note":[""], "duration":"16n"},
-      {"time":"6:2:0", "note":[""], "duration":"16n"},
-      {"time":"6:2:1", "note":[""], "duration":"16n"},
-      {"time":"6:2:2", "note":[47, 43, 40], "duration":"16n"},
-      {"time":"6:2:3", "note":[""], "duration":"16n"},
-      {"time":"6:3:0", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"6:3:1", "note":[""], "duration":"16n"},
-      {"time":"6:3:2", "note":[], "duration":"16n"},
-      {"time":"6:3:3", "note":[""], "duration":"16n"},
-      {"time":"7:0:0", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"7:0:1", "note":[""], "duration":"16n"},
-      {"time":"7:0:2", "note":[], "duration":"16n"},
-      {"time":"7:0:3", "note":[], "duration":"16n"},
-      {"time":"7:1:0", "note":[47, 43, 40], "duration":"16n"},
-      {"time":"7:1:1", "note":[], "duration":"16n"},
-      {"time":"7:1:2", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"7:1:3", "note":[""], "duration":"16n"},
-      {"time":"7:2:0", "note":[""], "duration":"16n"},
-      {"time":"7:2:1", "note":[""], "duration":"16n"},
-      {"time":"7:2:2", "note":[47, 43, 40], "duration":"16n"},
-      {"time":"7:2:3", "note":[""], "duration":"16n"},
-      {"time":"7:3:0", "note":[47, 43, 40], "duration":"8n"},
-      {"time":"7:3:1", "note":[""], "duration":"16n"},
-      {"time":"7:3:2", "note":[], "duration":"16n"},
-      {"time":"7:3:3", "note":[""], "duration":"16n"}
-    ];
-  }else if(rhythm_pattern == "B"){
-
-  }else{
-
-  }
+  // COMBAK: わざわざtest_chord2_originalに入れる必要性があるのか？
+  test_chord2_original = chord_prog;
 
   var test_chord2 = test_chord2_original.split(" ");
   var bassline = [];
@@ -695,8 +568,8 @@ jQuery(function($){
     }
 
     for(var y=0; y<16; y++){
-      if(chord_stroke[x*16+y].note.length > 0 && chord_stroke[x*16+y].note[0] != ""){
-        MIDI_chord.push(chord_stroke[x*16+y]);
+      if(chord_stroke[rhythm_pattern][x*16+y].note.length > 0 && chord_stroke[rhythm_pattern][x*16+y].note[0] != ""){
+        MIDI_chord.push(chord_stroke[rhythm_pattern][x*16+y]);
         for(var z=0; z<3; z++){
           MIDI_chord[cc_index].note[z] -= Keys[key[x]];
           MIDI_chord[cc_index].note[z] += chord[x][z];
@@ -714,7 +587,7 @@ jQuery(function($){
       }
     }
   }
-  //console.log(MIDI_chord);
+  console.log(MIDI_chord);
 
   //ベース(コードからの自動生成)
   /*2拍に1回のペースでルート音を演奏。(C2〜B2)
@@ -731,137 +604,6 @@ jQuery(function($){
   }
   //console.log(MIDI_bass);
 
-  //ドラム生成
-  var test_drum = [
-    ["0:0:0", ["C1", "G#1", "C#2"]],
-    ["0:0:1", [""]],
-    ["0:0:2", ["G#1"]],
-    ["0:0:3", [""]],
-    ["0:1:0", ["G#1"]],
-    ["0:1:1", [""]],
-    ["0:1:2", ["C1", "G#1"]],
-    ["0:1:3", [""]],
-    ["0:2:0", ["G#1"]],
-    ["0:2:1", [""]],
-    ["0:2:2", ["G#1"]],
-    ["0:2:3", [""]],
-    ["0:3:0", ["C1", "A#1"]],
-    ["0:3:1", [""]],
-    ["0:3:2", ["G#1"]],
-    ["0:3:3", [""]],
-    ["1:0:0", ["C1", "G#1", "C#2"]],
-    ["1:0:1", [""]],
-    ["1:0:2", ["G#1"]],
-    ["1:0:3", [""]],
-    ["1:1:0", ["G#1"]],
-    ["1:1:1", [""]],
-    ["1:1:2", ["C1", "G#1"]],
-    ["1:1:3", [""]],
-    ["1:2:0", ["G#1"]],
-    ["1:2:1", [""]],
-    ["1:2:2", ["G#1"]],
-    ["1:2:3", [""]],
-    ["1:3:0", ["C1", "A#1"]],
-    ["1:3:1", [""]],
-    ["1:3:2", ["G#1"]],
-    ["1:3:3", [""]],
-    ["2:0:0", ["C1", "G#1", "C#2"]],
-    ["2:0:1", [""]],
-    ["2:0:2", ["G#1"]],
-    ["2:0:3", [""]],
-    ["2:1:0", ["G#1"]],
-    ["2:1:1", [""]],
-    ["2:1:2", ["C1", "G#1"]],
-    ["2:1:3", [""]],
-    ["2:2:0", ["G#1"]],
-    ["2:2:1", [""]],
-    ["2:2:2", ["G#1"]],
-    ["2:2:3", [""]],
-    ["2:3:0", ["C1", "A#1"]],
-    ["2:3:1", [""]],
-    ["2:3:2", ["G#1"]],
-    ["2:3:3", [""]],
-    ["3:0:0", ["C1", "G#1", "C#2"]],
-    ["3:0:1", [""]],
-    ["3:0:2", ["G#1"]],
-    ["3:0:3", [""]],
-    ["3:1:0", ["G#1"]],
-    ["3:1:1", [""]],
-    ["3:1:2", ["C1", "G#1"]],
-    ["3:1:3", [""]],
-    ["3:2:0", ["G#1"]],
-    ["3:2:1", [""]],
-    ["3:2:2", ["G#1"]],
-    ["3:2:3", [""]],
-    ["3:3:0", ["C1", "A#1"]],
-    ["3:3:1", [""]],
-    ["3:3:2", ["G#1"]],
-    ["3:3:3", [""]],
-    ["4:0:0", ["C1", "G#1", "C#2"]],
-    ["4:0:1", [""]],
-    ["4:0:2", ["G#1"]],
-    ["4:0:3", [""]],
-    ["4:1:0", ["G#1"]],
-    ["4:1:1", [""]],
-    ["4:1:2", ["C1", "G#1"]],
-    ["4:1:3", [""]],
-    ["4:2:0", ["G#1"]],
-    ["4:2:1", [""]],
-    ["4:2:2", ["G#1"]],
-    ["4:2:3", [""]],
-    ["4:3:0", ["C1", "A#1"]],
-    ["4:3:1", [""]],
-    ["4:3:2", ["G#1"]],
-    ["4:3:3", [""]],
-    ["5:0:0", ["C1", "G#1", "C#2"]],
-    ["5:0:1", [""]],
-    ["5:0:2", ["G#1"]],
-    ["5:0:3", [""]],
-    ["5:1:0", ["G#1"]],
-    ["5:1:1", [""]],
-    ["5:1:2", ["C1", "G#1"]],
-    ["5:1:3", [""]],
-    ["5:2:0", ["G#1"]],
-    ["5:2:1", [""]],
-    ["5:2:2", ["G#1"]],
-    ["5:2:3", [""]],
-    ["5:3:0", ["C1", "A#1"]],
-    ["5:3:1", [""]],
-    ["5:3:2", ["G#1"]],
-    ["5:3:3", [""]],
-    ["6:0:0", ["C1", "G#1", "C#2"]],
-    ["6:0:1", [""]],
-    ["6:0:2", ["G#1"]],
-    ["6:0:3", [""]],
-    ["6:1:0", ["G#1"]],
-    ["6:1:1", [""]],
-    ["6:1:2", ["C1", "G#1"]],
-    ["6:1:3", [""]],
-    ["6:2:0", ["G#1"]],
-    ["6:2:1", [""]],
-    ["6:2:2", ["G#1"]],
-    ["6:2:3", [""]],
-    ["6:3:0", ["C1", "A#1"]],
-    ["6:3:1", [""]],
-    ["6:3:2", ["G#1"]],
-    ["6:3:3", [""]],
-    ["7:0:0", ["C1", "G#1", "C#2"]],
-    ["7:0:1", [""]],
-    ["7:0:2", ["G#1"]],
-    ["7:0:3", [""]],
-    ["7:1:0", ["G#1"]],
-    ["7:1:1", [""]],
-    ["7:1:2", ["C1", "G#1"]],
-    ["7:1:3", [""]],
-    ["7:2:0", ["G#1"]],
-    ["7:2:1", [""]],
-    ["7:2:2", ["G#1"]],
-    ["7:2:3", [""]],
-    ["7:3:0", ["C1", "A#1"]],
-    ["7:3:1", [""]],
-    ["7:3:2", ["G#1"]],
-    ["7:3:3", [""]]
-  ];
 
   //再生処理
   $("#play").click(function(){
@@ -869,12 +611,12 @@ jQuery(function($){
     if(play_flg == 0){
       var play_MIDI_Melody = []; //再生用に無駄な情報を省いたもの
       var play_MIDI_Drum =[];
-      for(z=0; z<test_drum.length; z++){ //本来はz<notes_measure
+      for(z=0; z<drum_pattern[rhythm_pattern].length; z++){ //本来はz<notes_measure
         if(MIDI_Melody[z].note.length > 0 && MIDI_Melody[z].note[0] != ""){
           play_MIDI_Melody.push(MIDI_Melody[z]);
         }
-        if(test_drum[z][1].length > 0 && test_drum[z][1][0] != ""){
-          play_MIDI_Drum.push(test_drum[z]);
+        if(drum_pattern[rhythm_pattern][z][1].length > 0 && drum_pattern[rhythm_pattern][z][1][0] != ""){
+          play_MIDI_Drum.push(drum_pattern[rhythm_pattern][z]);
         }
       }
       if(mute_flg[0] == 0){

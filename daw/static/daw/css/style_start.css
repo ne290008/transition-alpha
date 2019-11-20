@@ -157,6 +157,12 @@ h2{
     justify-content: center;
     margin-bottom: 20px;
 }
+.beat_play-btn{
+  display: block;
+}
+.beat_stop-btn{
+  display: none;
+}
 
 .bpm_changer{
     text-align: center;
@@ -166,9 +172,20 @@ h2{
     font-size: 20px;
     margin-bottom: 5px;
 }
+.gene_chords{
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 40px;
+}
 .demo_seekbar{
     display: flex;
     justify-content: center;
     margin-top: 20px;
     margin-bottom: 20px;
+}
+.demo_play-btn{
+  display: block;
+}
+.demo_stop-btn{
+  display: none;
 }

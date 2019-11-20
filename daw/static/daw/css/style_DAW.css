@@ -234,8 +234,12 @@ label span{
 
 /*instbar*/
 .inst_bar{
+  overflow-y: auto;
   width: 20%;
   height: 100%;
+}
+.inst_bar::-webkit-scrollbar{
+  display: none;
 }
 .inst_bar p{
     margin: 0;

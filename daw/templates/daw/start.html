@@ -3,28 +3,32 @@
 <html lang="ja">
   <head>
     <meta charset="utf-8">
-    <title>DAW Start</title>
+    <title>Deeparture | Start</title>
     <link rel="stylesheet" type="text/css" href="{% static 'daw/css/style_start.css' %}">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
       //共用変数
-      var artist = "none";
-      var key = "none";
-      var rhythm_pattern = "none";
-      var chord_prog = "none";
+      var artist = "";
+      var key = "";
+      var rhythm_pattern = "";
+      var chord_stroke = {};
+      var drum_pattern = {};
+      var chord_prog = "";
       var bpm;
       $(document).ready(() => bpm = document.getElementsByClassName('bpm_number')[0].value);
-      // CSRF対策
-      const token = '{{ csrf_token }}';
-      const daw_new = "{% url 'daw_new' %}";
+      const token = '{{ csrf_token }}';  // CSRF対策
+      const daw_new = "{% url 'daw_new' %}";  // ページ遷移時に使用
     </script>
+    <script src="{% static 'daw/js/tone.js' %}"></script>
+    <script src="{% static 'daw/js/rhythm_pattern.js' %}"></script>
     <script src="{% static 'daw/js/start/prog_control.js' %}"></script>
     <script src="{% static 'daw/js/start/demo.js' %}"></script>
   </head>
   <body>
     <div class="main">
         <header class="Top_title">
-            <h1>DAW prototype</h1>
+            <h1>Deeparture</h1>
         </header>
         <section id="Progress_bar">
             <div class="Progress_number is-active">
@@ -44,14 +48,11 @@
             <div class="start_page is-show">
                 <h2>Select Fav Artist</h2>
                 <div class="Select_artist">
-                  <p class="artists_item">椎名林檎</p>
-                  <p class="artists_item">ART-SCHOOL</p>
                   <p class="artists_item">あいみょん</p>
                   <p class="artists_item">ELLEGARDEN</p>
-                  <p class="artists_item">スキマスイッチ</p>
                   <p class="artists_item">チャットモンチー</p>
                   <p class="artists_item">MONGOL800</p>
-                  <p class="artists_item">コブクロ</p>
+                  <p class="artists_item">ryo</p>
                   <p class="artists_item">Mr.Children</p>
                 </div>
                 <div class="start_next-btn">
@@ -79,34 +80,43 @@
                 </div>
             </div>
             <div class="start_page">
-                <h2>Select Fav Beat</h2>
-                <div class="Select_beat">
-                    <p class="beats_item">A</p>
-                    <p class="beats_item">B</p>
-                    <p class="beats_item">C</p>
-                </div>
-                <div class="beat_seekbar">
-                    <audio controls>
-                    </audio>
-                </div>
-                <div class="start_next-btn">
-                    <p>Next</p>
-                </div>
+              <h2>Select Fav Beat</h2>
+              <div class="Select_beat">
+                  <p class="beats_item">A</p>
+                  <p class="beats_item">B</p>
+                  <p class="beats_item">C</p>
+              </div>
+              <div class="bpm_changer">
+                <p>BPM</p>
+                <input class="bpm_number" type="number" value="120" autocomplete="off">
+              </div>
+              <div class="beat_seekbar">
+                <p class="beat_play">
+                  <span class="beat_play-btn"><i class="fas fa-play fa-2x"></i></span>
+                  <span class="beat_stop-btn"><i class="far fa-square fa-2x"></i></span>
+                </p>
+              </div>
+              <div class="start_next-btn">
+                <p>Next</p>
+              </div>
             </div>
             <div class="start_page">
-                <h2>Created DEMO!</h2>
-                <div class="bpm_changer">
-                    <p>BPM</p>
-                    <input class="bpm_number" type="number" value="120">
-                </div>
-                <div class="demo_seekbar">
-                    <audio controls>
-                    </audio>
-                </div>
-                <p class="suggested_chords"></p>
-                <div class="start_next-btn">
-                    <p>Start</p>
-                </div>
+              <h2>Created DEMO!</h2>
+              <p class="gene_chords"></p>
+              <div class="bpm_changer">
+                  <p>BPM</p>
+                  <input class="bpm_number" type="number" value="120" autocomplete="off">
+              </div>
+              <div class="demo_seekbar">
+                <p class="demo_play">
+                  <span class="demo_play-btn"><i class="fas fa-play fa-2x"></i></span>
+                  <span class="demo_stop-btn"><i class="far fa-square fa-2x"></i></span>
+                </p>
+              </div>
+              <p class="suggested_chords"></p>
+              <div class="start_next-btn">
+                  <p>Start</p>
+              </div>
             </div>
         </section>
     </div>
