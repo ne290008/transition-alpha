@@ -3,6 +3,7 @@ var bassline = [];
 var MIDI_bass = [];
 var MIDI_drum = [];
 var default_chord = "C Dm Em F";
+// HACK: generated_chordはchord_progに置き換えるべき
 var generated_chord = "Dm Am Bb F"; //Chainerからの出力
 var bpm = 120;
 
@@ -30,9 +31,10 @@ var Tensions = [
 Mscale_Do.reverse(); //逆から表示するために反転している
 Mscale_C.reverse(); //同上
 
+// NOTE: タブ切り替え初回時のみデモを生成するようにするためのフラグ
+let isCreatedDeme = 0;
+
 jQuery(function($){
-  //コード進行の出力
-  $(".gene_chords").append(generated_chord);
   //音源の定義
   var polysynth_chord = new Tone.PolySynth().toMaster(); //Chord用
   var plucksynth = new Tone.PluckSynth().toMaster(); //Bass用
@@ -142,12 +144,21 @@ jQuery(function($){
       if(chord_stroke.A[x].note.length > 0 && chord_stroke.A[x].note[0] != ""){
         chord_stroke.A[x].note = [47, 43, 40];
       }
-      /*if(chord_stroke.B[x].note.length > 0 && chord_stroke.B[x].note[0] != ""){
+    }
+    for(var x=0; x<chord_stroke.B.length; x++){
+      if(chord_stroke.B[x].note.length > 0 && chord_stroke.B[x].note[0] != ""){
         chord_stroke.B[x].note = [47, 43, 40];
       }
+    }
+    for(var x=0; x<chord_stroke.C.length; x++){
       if(chord_stroke.C[x].note.length > 0 && chord_stroke.C[x].note[0] != ""){
         chord_stroke.C[x].note = [47, 43, 40];
-      }*/
+      }
+    }
+    for(var x=0; x<chord_stroke.D.length; x++){
+      if(chord_stroke.D[x].note.length > 0 && chord_stroke.D[x].note[0] != ""){
+        chord_stroke.D[x].note = [47, 43, 40];
+      }
     }
     console.log(chord_stroke);
   }
@@ -166,7 +177,7 @@ jQuery(function($){
   }
 
   function Drum_gene(){
-    for(var x=0; x<notes_measure; x++){ //本来はx<notes_measure
+    for(var x=0; x<drum_pattern[rhythm_pattern].length; x++){
       if(drum_pattern[rhythm_pattern][x][1].length > 0 && drum_pattern[rhythm_pattern][x][1][0] != ""){
         MIDI_drum.push(drum_pattern[rhythm_pattern][x]);
       }
@@ -191,6 +202,7 @@ jQuery(function($){
         $('.beat_play-btn').css('display','none');
         $('.beat_stop-btn').css('display','block');
         //再生の処理
+        polysynth_chord.triggerAttackRelease("", '16n'); //Chrome用の処理
         MIDI_gene(default_chord, rhythm_pattern);
         Tone.Transport.bpm.value = bpm;
         var Chord = new Tone.Part(addChord, MIDI_chord).start();
@@ -213,17 +225,20 @@ jQuery(function($){
       console.log(artist);
       console.log(key);
       console.log(rhythm_pattern);
-      generateChordProgression("hoge", key.split("/")[0]).then(response => {
-        console.log('succeed');
-        console.log(response);
-        chord_prog = generated_chord = response.chord_progression;
-        MIDI_gene(generated_chord, "A");
-        $(".gene_chords").text(generated_chord);
-      })
-      .catch(error => {
-        console.log('failed');
-        console.log(error);
-      });
+      if(!isCreatedDeme) {
+        generateChordProgression("hoge", key.split("/")[0]).then(response => {
+          console.log('succeed');
+          console.log(response);
+          chord_prog = generated_chord = response.chord_progression;
+          MIDI_gene(generated_chord, "A");
+          $(".gene_chords").html(generated_chord);
+          isCreatedDeme = 1;
+        })
+        .catch(error => {
+          console.log('failed');
+          console.log(error);
+        });
+      }
     }
   });
   $(".Progress_number").click(function(){
@@ -231,7 +246,20 @@ jQuery(function($){
       console.log(artist);
       console.log(key);
       console.log(rhythm_pattern);
-      MIDI_gene(generated_chord, "A");
+      if(!isCreatedDeme) {
+        generateChordProgression("hoge", key.split("/")[0]).then(response => {
+          console.log('succeed');
+          console.log(response);
+          chord_prog = generated_chord = response.chord_progression;
+          MIDI_gene(generated_chord, "A");
+          $(".gene_chords").html(generated_chord);
+          isCreatedDeme = 1;
+        })
+        .catch(error => {
+          console.log('failed');
+          console.log(error);
+        });
+      }
     }
   });
 
@@ -240,12 +268,32 @@ jQuery(function($){
     bpm = $(this).val();
   });
 
+  $(".regeneration_btn").on("click", function(){ //コード再生成btn
+    if(confirm('本当にコード進行の再生成を行いますか。')){
+      generateChordProgression("hoge", key.split("/")[0]).then(response => {
+        console.log('succeed');
+        console.log(response);
+        chord_prog = generated_chord = response.chord_progression;
+        MIDI_gene(generated_chord, "A");
+        $(".gene_chords").html(generated_chord);
+        isCreatedDeme = 1;
+      })
+      .catch(error => {
+        console.log('failed');
+        console.log(error);
+      });
+    }else{
+      return false;
+    }
+  });
+
   $('.demo_play').on("click", function() {
     Tone.Transport.bpm.value = bpm;
     if($(".demo_play-btn").css("display") == "block"){
       $('.demo_play-btn').css('display','none');
       $('.demo_stop-btn').css('display','block');
       //再生の処理
+      polysynth_chord.triggerAttackRelease("", '16n'); //Chrome用の処理
       var Chord = new Tone.Part(addChord, MIDI_chord).start();
       var Bass = new Tone.Part(addBass, MIDI_bass).start();
       var Drum = new Tone.Part(addDrum, drum_pattern[rhythm_pattern]).start();

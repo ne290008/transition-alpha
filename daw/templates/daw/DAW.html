@@ -14,16 +14,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!--グローバル変数-->
     <script type="text/javascript">
-      var mute_flg = [0, 0, 0, 0];
       var play_flg = 0;
       var MIDI_Melody = [];
       var chord_stroke = {};
       var drum_pattern = {};
 
-      // CSRF対策
-      const token = '{{ csrf_token }}';
-
-      // TODO: 画面遷移時にSessionStorageをclearすべき（unloadとか使って）
+      const token = '{{ csrf_token }}';  // CSRF対策
+      const index = "{% url 'index' %}";  // ページ遷移時に使用
 
       // データの取得
       // メロディデータの取り出し
@@ -76,16 +73,17 @@
         <div class="help-button">
           <p id="help"><i class="far fa-question-circle fa-fw"></i></p>
         </div>
+        <div class="back-button">
+          <p id="back"><i class="fas fa-directions"></i></p>
+        </div>
 
         <!--真ん中-->
         <div class="saisei">
           <p id ="backward"><i class="fas fa-fast-backward"></i></p>
-          <p id ="forward"><i class="fas fa-fast-forward"></i></p>
           <p id ="play">
             <span class="play-btn"><i class="fas fa-play"></i></span>
             <span class="stop-btn"><i class="far fa-square"></i></span>
           </p>
-          <p id ="undo"><i class="fas fa-undo"></i></p>
         </div>
 
         <!--右-->
@@ -93,16 +91,16 @@
           <table cellpadding="0" cellspacing="1" align="right">
             <tr>
               <td class="exbar">
-                <p class="gr">1</p>
+                <p class="gr"></p>
                 <p class="wh">bar</p>
               </td>
               <td>
                 <p class="gr bpm_value"></p>
-                <input class="bpm_slider" type="range" max="240" min="0">
+                <input class="bpm_slider" type="range" value="120" max="240" min="40" autocomplete="off">
                 <p class="wh">bpm</p>
               </td>
               <td class="extime">
-                <p class="gr">0:00:000</p>
+                <p class="gr"></p>
                 <p class="wh">time</p>
               </td>
               <td>
@@ -120,11 +118,11 @@
         <div class="scale_bar">
           <label class="width_scale">
             <span>width_scale</span>
-            <input type="range" class="width_scale_bar" min="50" max="150">
+            <input type="range" class="width_scale_bar" min="50" max="150" autocomplete="off">
           </label>
           <label class="height_scale">
             <span>height_scale</span>
-            <input type="range" class="height_scale_bar" min="50" max="150">
+            <input type="range" class="height_scale_bar" min="50" max="150" autocomplete="off">
           </label>
         </div>
       </div>
@@ -141,10 +139,10 @@
             <div class="inst_item_right">
                 <div>
                     <p>L</p>
-                    <input type="range" class="input-knob pan"/>
+                    <input type="range" class="input-knob pan" autocomplete="off">
                     <p>R</p>
                 </div>
-                <input type="range" class="volume" value="50" min="0" max="99" >
+                <input type="range" class="volume" value="0" min="-15" max="15" autocomplete="off">
             </div>
             <div class="inst_item_bottom">
               <details>
@@ -170,10 +168,10 @@
             <div class="inst_item_right">
                 <div>
                     <p>L</p>
-                    <input type="range" class="input-knob pan"/>
+                    <input type="range" class="input-knob pan" autocomplete="off">
                     <p>R</p>
                 </div>
-                <input type="range" class="volume" value="50" min="0" max="99" >
+                <input type="range" class="volume" value="0" min="-15" max="15" autocomplete="off">
             </div>
             <div class="inst_item_bottom">
               <details>
@@ -199,10 +197,10 @@
             <div class="inst_item_right">
                 <div>
                     <p>L</p>
-                    <input type="range" class="input-knob pan"/>
+                    <input type="range" class="input-knob pan" autocomplete="off">
                     <p>R</p>
                 </div>
-                <input type="range" class="volume" value="50" min="0" max="99" >
+                <input type="range" class="volume" value="0" min="-15" max="15" autocomplete="off">
             </div>
             <div class="inst_item_bottom">
               <details>
@@ -228,10 +226,10 @@
             <div class="inst_item_right">
                 <div>
                     <p>L</p>
-                    <input type="range" class="input-knob pan"/>
+                    <input type="range" class="input-knob pan" autocomplete="off">
                     <p>R</p>
                 </div>
-                <input type="range" class="volume" value="50" min="0" max="99" >
+                <input type="range" class="volume" value="0" min="-15" max="15" autocomplete="off">
             </div>
             <div class="inst_item_bottom">
               <details>
@@ -256,6 +254,7 @@
             <div class="Mscale_grid">
 
             </div>
+            <div class="Seekbar"></div>
             <div class="note_grid">
 
             </div>

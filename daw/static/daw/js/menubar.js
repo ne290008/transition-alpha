@@ -94,6 +94,15 @@ $('#help').click(function() {
   }
 });
 
+$("#back").click(function(){
+  if(confirm('保存していない内容は破棄されますが、本当にプロジェクト選択画面に戻りますか。')){
+    sessionStorage.clear();
+    location.href = index;
+  }else{
+    return false;
+  }
+});
+
 /*再生ボタンと停止ボタン*/
 $('#play').click(function() {
   if(play_flg == 0){

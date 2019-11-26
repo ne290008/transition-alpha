@@ -4,8 +4,12 @@
   <head>
     <meta charset="utf-8">
     <title>Deeparture | Start</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'daw/css/style_start.css' %}">
     <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'daw/css/tutorial/highlight.js.css' %}">
+    <link rel="stylesheet" href="{% static 'daw/css/tutorial/swiper.min.css' %}">
+    <link rel="stylesheet" href="{% static 'daw/css/tutorial/style.css' %}">
+    <link rel="stylesheet" href="{% static 'daw/css/tutorial/sample.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'daw/css/style_start.css' %}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
       //共用変数
@@ -18,17 +22,45 @@
       var bpm;
       $(document).ready(() => bpm = document.getElementsByClassName('bpm_number')[0].value);
       const token = '{{ csrf_token }}';  // CSRF対策
+      const index = "{% url 'index' %}";  // ページ遷移時に使用
       const daw_new = "{% url 'daw_new' %}";  // ページ遷移時に使用
     </script>
     <script src="{% static 'daw/js/tone.js' %}"></script>
     <script src="{% static 'daw/js/rhythm_pattern.js' %}"></script>
     <script src="{% static 'daw/js/start/prog_control.js' %}"></script>
     <script src="{% static 'daw/js/start/demo.js' %}"></script>
+    <script src="{% static 'daw/js/tutorial/highlight.js' %}"></script>
+    <script src="{% static 'daw/js/tutorial/highlightjs-line-numbers.min.js' %}"></script>
+    <script src="{% static 'daw/js/tutorial/swiper.min.js' %}"></script>
+    <script src="{% static 'daw/js/tutorial/script.js' %}"></script>
   </head>
   <body>
     <div class="main">
+      <div class="l-wrapper">
+        <div class="c-container">
+          <p class="tutorial_close-btn"><i class="fas fa-times fa-2x"></i></p>
+          <div class="sample sample01">
+            <div class="swiper-container">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="{% static 'daw/images/artist.png' %}"></div>
+                <div class="swiper-slide"><img src="{% static 'daw/images/Key.png' %}"></div>
+                <div class="swiper-slide"><img src="{% static 'daw/images/Beat.png' %}"></div>
+                <div class="swiper-slide"><img src="{% static 'daw/images/BPM.png' %}"></div>
+                <div class="swiper-slide"><img src="{% static 'daw/images/melody.png' %}"></div>
+              </div>
+
+              <div class="swiper-button-prev"></div>
+              <div class="swiper-button-next"></div>
+
+              <div class="swiper-pagination"></div>
+            </div>
+          </div>
+        </div>
+      </div>
         <header class="Top_title">
-            <h1>Deeparture</h1>
+          <h1>Deeparture</h1>
+          <p class="start_over"><i class="fas fa-directions"></i></p>
+          <p class="start_tutorial"><i class="far fa-question-circle"></i></p>
         </header>
         <section id="Progress_bar">
             <div class="Progress_number is-active">
@@ -52,7 +84,6 @@
                   <p class="artists_item">ELLEGARDEN</p>
                   <p class="artists_item">チャットモンチー</p>
                   <p class="artists_item">MONGOL800</p>
-                  <p class="artists_item">ryo</p>
                   <p class="artists_item">Mr.Children</p>
                 </div>
                 <div class="start_next-btn">
@@ -82,9 +113,10 @@
             <div class="start_page">
               <h2>Select Fav Beat</h2>
               <div class="Select_beat">
-                  <p class="beats_item">A</p>
-                  <p class="beats_item">B</p>
-                  <p class="beats_item">C</p>
+                <p class="beats_item">A</p>
+                <p class="beats_item">B</p>
+                <p class="beats_item">C</p>
+                <p class="beats_item">D</p>
               </div>
               <div class="bpm_changer">
                 <p>BPM</p>
@@ -103,6 +135,7 @@
             <div class="start_page">
               <h2>Created DEMO!</h2>
               <p class="gene_chords"></p>
+              <p class="regeneration_btn">Chord Regeneration</p>
               <div class="bpm_changer">
                   <p>BPM</p>
                   <input class="bpm_number" type="number" value="120" autocomplete="off">
@@ -114,7 +147,7 @@
                 </p>
               </div>
               <p class="suggested_chords"></p>
-              <div class="start_next-btn">
+              <div class="start_next-btn DAW_start-btn">
                   <p>Start</p>
               </div>
             </div>

@@ -8,6 +8,9 @@ body {
     background-color: #aaa;
     margin-bottom: 30px;
 }
+.main{
+  position: relative;
+}
 a {
     text-decoration: none;
     color: #333;
@@ -25,6 +28,65 @@ h2{
     text-align: center;
 }
 
+.l-wrapper{
+  position: absolute;
+  display: block;
+  top: 80%;
+  left: 50%;
+  transform : translate(-50%, -50%);
+  z-index: 100;
+  padding-bottom: 0;
+}
+.tutorial_close-btn{
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 101;
+}
+
+.Top_title{
+  position: relative;
+}
+.start_over{
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  margin: 20px;
+  border: none;
+  background-color: #9effce;
+  color: #595757;
+  font-size: 30px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 10px;
+  user-select: none; /* CSS3 */
+  cursor: pointer;
+}
+.start_over:hover{
+  opacity: 0.8;
+}
+.start_tutorial{
+  position: absolute;
+  top: 0;
+  left: 70px;
+  padding: 10px;
+  margin: 20px;
+  border: none;
+  background-color: khaki;
+  color: #595757;
+  font-size: 30px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 10px;
+  user-select: none; /* CSS3 */
+  cursor: pointer;
+}
+.start_tutorial:hover{
+  opacity: 0.8;
+}
 #Progress_bar {
     display: flex;
     justify-content: center;
@@ -74,6 +136,7 @@ h2{
     line-height: 200px;
     margin: 10px 0;
     cursor: pointer;
+
     font-size: 20px;
     font-weight: bold;
     color: #333;
@@ -95,6 +158,9 @@ h2{
     line-height: 75px;
     margin: 0 auto;
     cursor: pointer;
+}
+.DAW_start-btn{
+  background-color: lightblue;
 }
 .start_next-btn:hover{
     opacity: 0.8;
@@ -177,6 +243,20 @@ h2{
   text-align: center;
   margin-bottom: 40px;
 }
+.regeneration_btn{
+  width: 250px;
+  height: 70px;
+  font-size: 20px;
+  background-color: white;
+  border-radius: 15px;
+  text-align: center;
+  line-height: 70px;
+  margin: 0 auto;
+  cursor: pointer;
+}
+.regeneration_btn:hover{
+    opacity: 0.8;
+}
 .demo_seekbar{
     display: flex;
     justify-content: center;
@@ -188,4 +268,9 @@ h2{
 }
 .demo_stop-btn{
   display: none;
+}
+
+/* COMBAK: 暫定的な対処 ちゃんと考えるべき */
+p{
+  margin: 1em 0;
 }
